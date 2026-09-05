@@ -1,0 +1,213 @@
+%-------------------------
+% Resume in LaTeX
+% Author : John Aledare (Jermaine / Jaykay)
+% Based on: Jake Gutierrez's ATS Template
+% License : MIT
+%-------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\input{glyphtounicode}
+
+%----------FONT OPTIONS----------
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape John Aledare} \\ \vspace{3pt}
+    \small \textbf{AI Engineer | Machine Learning Engineer} \\ \vspace{2pt}
+    \small \href{mailto:aledareoluwaseunjohn@gmail.com}{\faEnvelope\ aledareoluwaseunjohn@gmail.com} $|$ 
+    \href{https://linkedin.com/in/johnaledare}{\faLinkedin\ linkedin.com/in/johnaledare} $|$
+    \href{https://github.com/Jaykay73}{\faGithub\ github.com/Jaykay73} $|$
+    \href{https://aledare.vercel.app}{\faGlobe\ aledare.vercel.app}
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Ilorin}{Ilorin, Nigeria}
+      {Bachelor of Engineering (B.Eng.) in Computer Engineering}{2021 -- 2026}
+      \resumeItemListStart
+        \resumeItem{Relevant Coursework: Data Structures \& Algorithms, Computer Architecture, Operating Systems, Intelligent Systems, Signal Processing, Software Engineering.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Python (Proficient), C++, JavaScript (ES6+), TypeScript, SQL (PostgreSQL, SQLite)} \\
+     \textbf{Frameworks \& Libraries}{: PyTorch, TensorFlow, Scikit-learn, ONNX / ONNX Runtime, Keras, OpenCV, Hugging Face Transformers} \\
+     \textbf{NLP, LLMs \& RAG}{: SentenceTransformers, FAISS, Pinecone, LangChain, Gemini 2.0 Flash, DeepSeek LLM, RAG Architecture, NER, Tokenization} \\
+     \textbf{Backend \& DevOps}{: FastAPI, Flask, Node.js, Docker, Kubernetes, Git, GitHub Actions CI/CD, Linux, AWS, GCP, Vercel} \\
+     \textbf{Frontend \& Tools}{: React 19, Next.js, Streamlit, Tailwind CSS, Framer Motion, Jupyter Notebooks}
+    }}
+ \end{itemize}
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Queryfier LLC}{Remote}
+      {Machine Learning Engineer}{Jan 2026 -- Present}
+      \resumeItemListStart
+        \resumeItem{Architect, train, and deploy production-grade machine learning models for NLP and Computer Vision tasks.}
+        \resumeItem{Construct end-to-end data preprocessing and continuous training pipelines using Scikit-learn, TensorFlow, and PyTorch.}
+        \resumeItem{Build low-latency asynchronous API inference microservices with FastAPI and interactive validation interfaces using Streamlit.}
+        \resumeItem{Enforce schema validation (Pydantic v2), containerize services with Docker, and implement real-time model monitoring.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Centre for Applied Machine Learning and Data Science (CAMLDS)}{On-site}
+      {Machine Learning Engineer Intern \& Python Tutor}{Mar 2025 -- Dec 2025}
+      \resumeItemListStart
+        \resumeItem{Developed and evaluated supervised and unsupervised machine learning pipelines for text classification and computer vision.}
+        \resumeItem{Built and deployed web demo prototypes using Streamlit and FastAPI for model validation.}
+        \resumeItem{Mentored junior interns and led hands-on tutoring sessions in Python, NumPy, Pandas, Scikit-learn, and neural networks.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{BitCheck -- Multimodal AI Verification API} $|$ \emph{PyTorch, FastAPI, OpenCV, Tesseract, C2PA, Docker}}{}
+          \resumeItemListStart
+            \resumeItem{Engineered a multi-signal forensic verification API analyzing images, audio, and text for AI generation and manipulation.}
+            \resumeItem{Integrated metadata extraction, C2PA provenance credentials, OCR watermark scanning, noise forensics, and a custom PyTorch classifier trained on 140K images with Grad-CAM explainability.}
+            \resumeItem{Containerized the service with Docker and deployed on Hugging Face Spaces with a Vercel web frontend.}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{AI Resume Optimizer \& Career Architect} $|$ \emph{Gemini 2.0 Flash, ONNX, FastAPI, Next.js, Docker}}{}
+          \resumeItemListStart
+            \resumeItem{Built an automated career coach parsing resumes with 95\% accuracy to identify skill gaps against target job descriptions.}
+            \resumeItem{Integrated Gemini 2.0 Flash for tailored cover letter generation and used ONNX quantization for low-latency NER inference.}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{LockedIn AI Service} $|$ \emph{FastAPI, DeepSeek LLM, Tavily API, YouTube API, SQLite, Pydantic}}{}
+          \resumeItemListStart
+            \resumeItem{Developed an automated learning roadmap generator fetching live candidates via Tavily/YouTube and filtering paywalls/duplicates.}
+            \resumeItem{Synthesized structured curriculum paths via DeepSeek LLM, validated with Pydantic v2 schemas and cached in SQLite.}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{Nigerian Pidgin Next-Word Predictor} $|$ \emph{PyTorch, LSTM, Trigram Models, FastAPI, Streamlit}}{}
+          \resumeItemListStart
+            \resumeItem{Designed a dual-model real-time next-word predictor for Nigerian Pidgin English balancing deep LSTM accuracy and Trigram speed.}
+            \resumeItem{Deployed model backend on Hugging Face Spaces with keystroke debouncing on Streamlit UI.}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{CineMatch API} $|$ \emph{FastAPI, FAISS, SentenceTransformers, Pandas, TMDB API}}{}
+          \resumeItemListStart
+            \resumeItem{Developed a semantic movie recommendation engine using MiniLM dense embeddings and FAISS vector similarity for sub-100ms retrieval.}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{Brain Tumor MRI \& Diabetic Retinopathy Classifiers} $|$ \emph{PyTorch, TensorFlow, EfficientNet, Grad-CAM}}{}
+          \resumeItemListStart
+            \resumeItem{Trained deep learning medical vision classifiers using transfer learning with Grad-CAM visual heatmaps for clinical interpretability.}
+            \resumeItem{Applied model quantization for edge deployment on mobile applications and interactive Streamlit web apps.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+%-----------PUBLICATIONS & WRITING-----------
+\section{Publications \& Technical Writing}
+  \resumeSubHeadingListStart
+    \resumeProjectHeading
+      {\textbf{Artificial Intelligence in Plain English (Medium Publication)}}{2025 -- 2026}
+      \resumeItemListStart
+        \resumeItem{\href{https://ai.plainenglish.io/your-models-accuracy-is-lying-to-you-e4428283b49d}{\textbf{Your Model’s Accuracy is Lying to You!}}: Breakdown of ML metrics for imbalanced datasets, loss functions, and F1 trade-offs.}
+        \resumeItem{\href{https://ai.plainenglish.io/chatgpt-will-agree-that-2-2-5-if-you-ask-nicely-enough-7c713832707c}{\textbf{ChatGPT Will Agree That 2+2=5 If You Ask Nicely Enough}}: Analysis of LLM sycophancy, RLHF reward hacking, and alignment.}
+        \resumeItem{\href{https://ai.plainenglish.io/why-llms-have-a-complete-meltdown-over-the-seahorse-emoji-2ba7dd6efec2}{\textbf{Why LLMs Have a Meltdown Over the Seahorse Emoji}}: Technical breakdown of BPE tokenizers and token fragmentation.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-------------------------------------------
+\end{document}
