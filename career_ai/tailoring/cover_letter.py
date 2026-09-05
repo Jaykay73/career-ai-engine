@@ -11,7 +11,12 @@ from career_ai.tailoring.schemas import CoverLetter
 from career_ai.company.research import CompanyResearchService, company_research_service, CompanyProfile
 from career_ai.llm.base import LLMProvider
 from career_ai.llm.factory import get_llm_provider
-from career_ai.llm.prompts import COVER_LETTER_SYSTEM_PROMPT, COVER_LETTER_USER_PROMPT
+from career_ai.llm.prompts import (
+    COVER_LETTER_SYSTEM_PROMPT,
+    COVER_LETTER_USER_PROMPT,
+    COVER_LETTER_REFINEMENT_SYSTEM_PROMPT,
+    COVER_LETTER_REFINEMENT_USER_PROMPT
+)
 from career_ai.core.logging import get_logger
 from career_ai.core.exceptions import LLMAuthenticationError
 
@@ -91,6 +96,47 @@ class CoverLetterGenerator:
         except Exception as e:
             logger.error("LLM cover letter generation failed: %s. Using fallback letter.", e)
             return self._synthesize_fallback_letter(job, company_prof)
+
+    def refine(
+        self,
+        current_letter: CoverLetter,
+        user_instruction: str,
+        job: JobRequirements,
+        analysis: JobAnalysisResult
+    ) -> CoverLetter:
+        """Refines existing cover letter according to candidate instructions."""
+        logger.info("Refining cover letter for %s at %s with instruction: %s", job.job_title, job.company_name, user_instruction[:80])
+
+        evidence_summary_lines = []
+        for req in analysis.supported_requirements[:8]:
+            evidence_summary_lines.append(f"- Requirement '{req.requirement}' supported by: {', '.join(req.evidence_chunk_ids)}")
+        evidence_summary = "\n".join(evidence_summary_lines)
+
+        prompt = COVER_LETTER_REFINEMENT_USER_PROMPT.format(
+            user_instruction=user_instruction,
+            company_name=job.company_name,
+            job_title=job.job_title,
+            current_cl_json=current_letter.model_dump_json(indent=2),
+            candidate_evidence_summary=evidence_summary
+        )
+
+        try:
+            letter = self.llm.generate_structured(
+                prompt=prompt,
+                schema=CoverLetter,
+                system_prompt=COVER_LETTER_REFINEMENT_SYSTEM_PROMPT,
+                temperature=0.2
+            )
+            letter.company_name = job.company_name
+            letter.position = job.job_title
+            letter.job_title = job.job_title
+            letter.candidate_name = "John Aledare"
+            if not letter.date:
+                letter.date = current_letter.date or datetime.utcnow().strftime("%B %d, %Y")
+            return letter
+        except Exception as e:
+            logger.error("LLM cover letter refinement failed: %s. Preserving current letter.", e)
+            return current_letter
 
     def _synthesize_fallback_letter(
         self,

@@ -222,6 +222,7 @@ def render_job_application():
                         job_title_override=job_title.strip() or None
                     )
                     st.session_state["generation_result"] = result
+                    st.session_state.pop("refinement_messages", None)
                     st.success("Tailored Application Generated & Verified Successfully!")
                 except Exception as e:
                     st.error(f"Generation failed: {str(e)}")
@@ -238,6 +239,45 @@ def render_job_application():
             st.success("🛡️ **Factual Claim Verification Passed!** All bullet points and claims are grounded in John's verified knowledge base.")
         elif verification:
             st.warning(f"⚠️ Verification Notes: {len(verification.unsupported_claims)} claims flagged for human review.")
+
+        # --- Interactive AI Refinement Chatbox ---
+        st.markdown("#### 💬 Refine with AI Before Downloading")
+        st.caption("Tell the AI what to change, rephrase, or emphasize (e.g. *'Highlight my Power BI and time series work in the first bullet'*, *'Shorten the summary'*, *'Focus more on data analytics'*).")
+
+        eff_title = gen_result.get("job_title", "Target Role")
+        eff_comp = gen_result.get("company_name", "Target Company")
+
+        if "refinement_messages" not in st.session_state or not st.session_state["refinement_messages"]:
+            st.session_state["refinement_messages"] = [
+                {
+                    "role": "assistant",
+                    "content": f"I have tailored your resume and cover letter for **{eff_title}** at **{eff_comp}**. If you would like any adjustments, rewording, or specific technical emphasis before downloading, tell me below!"
+                }
+            ]
+
+        chat_container = st.container(height=260, border=True)
+        with chat_container:
+            for msg in st.session_state["refinement_messages"]:
+                with st.chat_message(msg["role"]):
+                    st.markdown(msg["content"])
+
+        user_correction = st.chat_input("Send correction or adjustment to the LLM (e.g., 'Emphasize Power BI in Queryfier bullets')...")
+        if user_correction:
+            st.session_state["refinement_messages"].append({"role": "user", "content": user_correction})
+            with st.spinner("Applying corrections, re-verifying claims, and updating LaTeX / PDF..."):
+                try:
+                    updated_result, reply_msg = application_service.refine_application(
+                        current_result=gen_result,
+                        user_instruction=user_correction,
+                        analysis=analysis
+                    )
+                    st.session_state["generation_result"] = updated_result
+                    st.session_state["refinement_messages"].append({"role": "assistant", "content": reply_msg})
+                    st.rerun()
+                except Exception as e:
+                    err = f"Correction failed: {str(e)}"
+                    st.session_state["refinement_messages"].append({"role": "assistant", "content": f"⚠️ {err}"})
+                    st.error(err)
 
         # Tabs for CV, Cover Letter, Traceability
         cv_tab, cl_tab, trace_tab, raw_tab = st.tabs([

@@ -21,7 +21,12 @@ from career_ai.tailoring.selector import EvidenceSelector, evidence_selector
 from career_ai.retrieval.rrf import RankedEvidence
 from career_ai.llm.base import LLMProvider
 from career_ai.llm.factory import get_llm_provider
-from career_ai.llm.prompts import TAILORING_SYSTEM_PROMPT, TAILORING_USER_PROMPT
+from career_ai.llm.prompts import (
+    TAILORING_SYSTEM_PROMPT,
+    TAILORING_USER_PROMPT,
+    CV_REFINEMENT_SYSTEM_PROMPT,
+    CV_REFINEMENT_USER_PROMPT
+)
 from career_ai.core.logging import get_logger
 from career_ai.core.exceptions import LLMAuthenticationError
 
@@ -87,6 +92,105 @@ class CVGenerator:
         except Exception as e:
             logger.error("LLM CV tailoring failed: %s. Using evidence synthesis fallback.", e)
             return self._synthesize_fallback_cv(job, prioritized_skills, relevant_pubs)
+
+    def refine(
+        self,
+        current_cv: TailoredCV,
+        user_instruction: str,
+        job: JobRequirements,
+        analysis: JobAnalysisResult,
+        evidence: Optional[List[RankedEvidence]] = None
+    ) -> TailoredCV:
+        """
+        Refines a previously tailored CV based on candidate's feedback.
+        Enforces that all invariants and evidence constraints remain strictly preserved.
+        """
+        logger.info("Refining tailored CV for %s with instruction: %s", job.job_title, user_instruction[:80])
+
+        prioritized_skills = current_cv.skills or self.selector.prioritize_skills(job)
+        relevant_pubs = current_cv.publications or self.selector.select_relevant_publications(job, max_publications=3)
+
+        eff_evidence = evidence or analysis.retrieved_evidence
+        evidence_text_blocks = []
+        for rank, ev in enumerate(eff_evidence[:25], start=1):
+            evidence_text_blocks.append(
+                f"[Evidence ID: {ev.chunk.id}]\n"
+                f"Source: {ev.chunk.title} ({ev.chunk.source_type} / {ev.chunk.section})\n"
+                f"Content: {ev.chunk.text}\n"
+            )
+        evidence_context = "\n".join(evidence_text_blocks)
+
+        prompt = CV_REFINEMENT_USER_PROMPT.format(
+            user_instruction=user_instruction,
+            job_title=job.job_title,
+            company_name=job.company_name,
+            current_cv_json=current_cv.model_dump_json(indent=2),
+            retrieved_evidence_text=evidence_context
+        )
+
+        try:
+            refined = self.llm.generate_structured(
+                prompt=prompt,
+                schema=TailoredCV,
+                system_prompt=CV_REFINEMENT_SYSTEM_PROMPT,
+                temperature=0.1
+            )
+            refined = self._enforce_invariants(refined, prioritized_skills, relevant_pubs)
+            return refined
+
+        except LLMAuthenticationError:
+            logger.warning("LLM key absent during CV refinement. Applying heuristic adjustments.")
+            return self._heuristic_refine_cv(current_cv, user_instruction)
+        except Exception as e:
+            logger.error("LLM CV refinement failed: %s. Using heuristic adjustment.", e)
+            return self._heuristic_refine_cv(current_cv, user_instruction)
+
+    def _heuristic_refine_cv(self, current_cv: TailoredCV, user_instruction: str) -> TailoredCV:
+        """Heuristically applies common candidate adjustments when offline."""
+        cv_copy = current_cv.model_copy(deep=True)
+        instr_lower = user_instruction.lower()
+
+        # Check for Power BI / Excel / Analytics emphasis
+        if any(k in instr_lower for k in ["power bi", "powerbi", "excel", "power query", "power pivot", "dax", "analytics"]):
+            if cv_copy.summary:
+                if "Power BI" not in cv_copy.summary:
+                    cv_copy.summary = f"Data & AI Engineer with deep expertise in Power BI, advanced Excel modeling, automated ETL, and production machine learning. {cv_copy.summary}"
+            bi_skills = ["Power BI", "DAX", "Power Query", "Power Pivot", "Microsoft Excel", "Star Schema Modeling", "KPI Dashboards"]
+            has_bi_cat = any("analytics" in c.category_name.lower() or "bi" in c.category_name.lower() for c in cv_copy.skills)
+            if not has_bi_cat:
+                cv_copy.skills.insert(1, TailoredSkillCategory(category_name="Data Analytics & BI", skills=bi_skills))
+            if cv_copy.experiences:
+                cv_copy.experiences[0].bullets.insert(
+                    0,
+                    TailoredBullet(
+                        text="Engineered automated business analytics pipelines and interactive Power BI dashboards utilizing DAX measures and Power Query ETL.",
+                        evidence_ids=["skill:technical-skills:data_analytics_and_bi"]
+                    )
+                )
+
+        # Check for Time Series emphasis
+        if any(k in instr_lower for k in ["time series", "forecasting", "arima", "sarima"]):
+            ts_skills = ["Time Series Modeling", "ARIMA / SARIMA", "Exponential Smoothing (Holt-Winters)", "Forecasting", "Stationarity (ADF/KPSS)"]
+            has_ts_cat = any("time series" in c.category_name.lower() or "forecasting" in c.category_name.lower() for c in cv_copy.skills)
+            if not has_ts_cat:
+                cv_copy.skills.insert(2, TailoredSkillCategory(category_name="Time Series & Forecasting", skills=ts_skills))
+            if cv_copy.experiences:
+                cv_copy.experiences[0].bullets.append(
+                    TailoredBullet(
+                        text="Developed time series forecasting and predictive modeling workflows using ARIMA and walk-forward cross-validation.",
+                        evidence_ids=["skill:technical-skills:time_series_and_forecasting"]
+                    )
+                )
+
+        # Check for shortening request
+        if any(k in instr_lower for k in ["shorten", "trim", "concise", "brief", "less"]):
+            if cv_copy.summary and len(cv_copy.summary.split(".")) > 3:
+                cv_copy.summary = ".".join(cv_copy.summary.split(".")[:2]).strip() + "."
+            for exp in cv_copy.experiences:
+                if len(exp.bullets) > 3:
+                    exp.bullets = exp.bullets[:3]
+
+        return self._enforce_invariants(cv_copy, cv_copy.skills, cv_copy.publications)
 
     def _enforce_invariants(
         self,
