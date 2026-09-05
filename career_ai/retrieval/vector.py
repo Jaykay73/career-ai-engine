@@ -4,9 +4,17 @@ Supports local embedded disk storage (no Docker required) and remote Qdrant.
 """
 
 from typing import List, Tuple, Dict, Any, Optional
+import os
 import uuid
+import warnings
 import numpy as np
 from pathlib import Path
+
+# Clean terminal output for local HF Hub caching
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
+warnings.filterwarnings("ignore", message=".*embeddings.position_ids.*")
+
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
     Distance,
