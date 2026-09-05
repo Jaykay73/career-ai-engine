@@ -79,6 +79,7 @@ class CoverLetterGenerator:
             )
             letter.company_name = job.company_name
             letter.position = job.job_title
+            letter.job_title = job.job_title
             letter.candidate_name = "John Aledare"
             if not letter.date:
                 letter.date = datetime.utcnow().strftime("%B %d, %Y")
@@ -113,6 +114,7 @@ class CoverLetterGenerator:
         return CoverLetter(
             company_name=job.company_name,
             position=job.job_title,
+            job_title=job.job_title,
             date=date_str,
             recipient_title=f"Hiring Team at {job.company_name}",
             opening=opening,

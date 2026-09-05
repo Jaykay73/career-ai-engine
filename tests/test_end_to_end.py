@@ -46,6 +46,9 @@ def test_full_pipeline():
     
     assert Path(result["tex_path"]).exists()
     assert Path(result["cover_letter_tex_path"]).exists()
+    assert result["cover_letter"].job_title == "AI Engineer"
+    assert result["cover_letter"].position == "AI Engineer"
+    assert result["cover_letter"].sign_off == "Sincerely"
     
     # Invariant assertions
     tex_content = Path(result["tex_path"]).read_text(encoding="utf-8")

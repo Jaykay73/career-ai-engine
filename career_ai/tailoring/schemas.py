@@ -70,14 +70,22 @@ class TailoredCV(BaseModel):
 
 class CoverLetter(BaseModel):
     company_name: str
-    position: str
+    position: str = ""
+    job_title: Optional[str] = None
     date: str = ""
     recipient_title: str = "Hiring Team"
-    opening: str
+    opening: str = ""
     body_paragraphs: List[str] = Field(default_factory=list)
-    closing: str
+    closing: str = ""
+    sign_off: str = "Sincerely"
     candidate_name: str = "John Aledare"
     evidence_ids: List[str] = Field(default_factory=list)
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.job_title and not self.position:
+            self.position = self.job_title
+        elif self.position and not self.job_title:
+            self.job_title = self.position
 
 class VerificationResult(BaseModel):
     is_valid: bool

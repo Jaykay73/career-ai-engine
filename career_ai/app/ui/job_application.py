@@ -280,21 +280,37 @@ def render_job_application():
             cl_tex_path = Path(gen_result["cover_letter_tex_path"])
             cover_letter = gen_result.get("cover_letter")
             if cover_letter:
-                st.markdown(f"**Company**: {cover_letter.company_name} | **Role**: {cover_letter.job_title}")
+                role_name = getattr(cover_letter, "job_title", None) or getattr(cover_letter, "position", "Target Role")
+                sign_off_val = getattr(cover_letter, "sign_off", "Sincerely")
+                st.markdown(f"**Company**: {cover_letter.company_name} | **Role**: {role_name}")
                 st.markdown(f"_{cover_letter.opening}_")
                 for para in cover_letter.body_paragraphs:
                     st.markdown(para)
                 st.markdown(f"_{cover_letter.closing}_")
-                st.markdown(f"**{cover_letter.sign_off}**,  \nJohn Aledare")
+                st.markdown(f"**{sign_off_val}**,  \nJohn Aledare")
 
-            if cl_tex_path.exists():
-                cl_tex = cl_tex_path.read_text(encoding="utf-8")
-                st.download_button(
-                    label="⬇️ Download Cover Letter LaTeX (.tex)",
-                    data=cl_tex,
-                    file_name=cl_tex_path.name,
-                    mime="text/x-tex"
-                )
+            c_cl1, c_cl2 = st.columns(2)
+            with c_cl1:
+                if cl_tex_path.exists():
+                    cl_tex = cl_tex_path.read_text(encoding="utf-8")
+                    st.download_button(
+                        label="⬇️ Download Cover Letter LaTeX (.tex)",
+                        data=cl_tex,
+                        file_name=cl_tex_path.name,
+                        mime="text/x-tex",
+                        use_container_width=True
+                    )
+            with c_cl2:
+                cl_pdf_path = gen_result.get("cover_letter_pdf_path")
+                if cl_pdf_path and Path(cl_pdf_path).exists():
+                    with open(cl_pdf_path, "rb") as f:
+                        st.download_button(
+                            label="⬇️ Download Cover Letter PDF (.pdf)",
+                            data=f.read(),
+                            file_name=Path(cl_pdf_path).name,
+                            mime="application/pdf",
+                            use_container_width=True
+                        )
 
         with trace_tab:
             st.markdown("#### Evidence Traceability Matrix")
@@ -303,9 +319,10 @@ def render_job_application():
             if tailored_cv:
                 st.markdown("##### Included Projects:")
                 for proj in tailored_cv.projects:
-                    st.markdown(f"**{proj.name}** (`knowledge/projects/{proj.slug}.md`)")
-                    for b in proj.bullet_points:
-                        st.markdown(f"- {b}")
+                    st.markdown(f"**{proj.name}** (`{proj.technologies}`)")
+                    for b in getattr(proj, "bullets", []):
+                        ev_str = f" *(Evidence: {', '.join(b.evidence_ids)})*" if b.evidence_ids else ""
+                        st.markdown(f"- {b.text}{ev_str}")
 
         with raw_tab:
             st.json(gen_result.get("metadata", {}))
