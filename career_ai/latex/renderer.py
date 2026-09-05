@@ -84,6 +84,17 @@ class LaTeXRenderer:
                 pub["title"] = escape_latex(pub.get("title", ""))
                 pub["summary"] = escape_latex(pub.get("summary", ""))
 
+        # Custom Sections
+        if "custom_sections" in data:
+            for sec in data["custom_sections"]:
+                sec["title"] = escape_latex(sec.get("title", ""))
+                for item in sec.get("items", []):
+                    item["heading"] = escape_latex(item.get("heading", ""))
+                    item["subheading"] = escape_latex(item.get("subheading", ""))
+                    item["date"] = escape_latex(item.get("date", ""))
+                    for b in item.get("bullets", []):
+                        b["text"] = escape_latex(b.get("text", ""))
+
         rendered = template.render(**data)
         logger.info("Successfully rendered LaTeX CV (%d characters)", len(rendered))
         return rendered

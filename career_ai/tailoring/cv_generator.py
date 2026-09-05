@@ -15,7 +15,9 @@ from career_ai.tailoring.schemas import (
     TailoredSkillCategory,
     TailoredPublication,
     TailoredEducation,
-    TailoredCertification
+    TailoredCertification,
+    TailoredCustomSection,
+    TailoredCustomSectionItem
 )
 from career_ai.tailoring.selector import EvidenceSelector, evidence_selector
 from career_ai.retrieval.rrf import RankedEvidence
@@ -181,6 +183,203 @@ class CVGenerator:
                         evidence_ids=["skill:technical-skills:time_series_and_forecasting"]
                     )
                 )
+
+        # Check for adding verified Projects
+        if any(k in instr_lower for k in ["churn", "attrition", "customer churn"]):
+            if not any("churn" in p.name.lower() for p in cv_copy.projects):
+                cv_copy.projects.insert(
+                    0,
+                    TailoredProject(
+                        name="Bank Customer Churn Predictor",
+                        technologies="Scikit-learn, Gradient Boosting, Streamlit, Pandas, Python",
+                        bullets=[
+                            TailoredBullet(
+                                text="Trained and tuned Gradient Boosting classifiers on banking records to identify customer attrition indicators with actionable feature importance attribution.",
+                                evidence_ids=["project:churn-predictor:architecture"]
+                            ),
+                            TailoredBullet(
+                                text="Engineered an interactive Streamlit inference web application providing real-time risk scoring and feature attribution rankings for prospective customers.",
+                                evidence_ids=["project:churn-predictor:results"]
+                            )
+                        ]
+                    )
+                )
+
+        if any(k in instr_lower for k in ["mri", "brain tumor", "tumor"]):
+            if not any("mri" in p.name.lower() or "tumor" in p.name.lower() for p in cv_copy.projects):
+                cv_copy.projects.insert(
+                    0,
+                    TailoredProject(
+                        name="Brain Tumor MRI Classifier",
+                        technologies="TensorFlow, Keras, EfficientNet-B0, Transfer Learning, Streamlit",
+                        bullets=[
+                            TailoredBullet(
+                                text="Trained deep convolutional transfer learning architecture (EfficientNet-B0) to classify 4 diagnostic brain tumor scan categories with medical data augmentations.",
+                                evidence_ids=["project:brain-tumor-mri:architecture"]
+                            ),
+                            TailoredBullet(
+                                text="Applied post-training model quantization for low-latency edge deployment and packaged an interactive diagnostic inference application on Streamlit.",
+                                evidence_ids=["project:brain-tumor-mri:results"]
+                            )
+                        ]
+                    )
+                )
+
+        if any(k in instr_lower for k in ["fraud", "credit card fraud"]):
+            if not any("fraud" in p.name.lower() for p in cv_copy.projects):
+                cv_copy.projects.insert(
+                    0,
+                    TailoredProject(
+                        name="Credit Card Fraud Detection",
+                        technologies="Scikit-learn, XGBoost, SMOTE, Imbalanced-Learn, Pandas",
+                        bullets=[
+                            TailoredBullet(
+                                text="Implemented anomaly detection pipelines addressing extreme class imbalance using SMOTE and cost-sensitive gradient boosted decision trees.",
+                                evidence_ids=["project:fraud-detection:solution"]
+                            ),
+                            TailoredBullet(
+                                text="Optimized precision-recall thresholds to capture fraudulent transactions with high sensitivity while minimizing false-positive alert fatigue.",
+                                evidence_ids=["project:fraud-detection:results"]
+                            )
+                        ]
+                    )
+                )
+
+        if any(k in instr_lower for k in ["pidgin", "nlp translation", "vernacular"]):
+            if not any("pidgin" in p.name.lower() for p in cv_copy.projects):
+                cv_copy.projects.insert(
+                    0,
+                    TailoredProject(
+                        name="Nigerian Pidgin NLP Sentiment & Translation",
+                        technologies="PyTorch, Hugging Face Transformers, Afro-XLMR, NLP",
+                        bullets=[
+                            TailoredBullet(
+                                text="Fine-tuned transformer models on low-resource Nigerian Pidgin corpora for sentiment classification and vernacular language understanding.",
+                                evidence_ids=["project:pidgin-predictor:solution"]
+                            ),
+                            TailoredBullet(
+                                text="Engineered specialized tokenization and preprocessing routines to handle vernacular dialect shifts and code-switching.",
+                                evidence_ids=["project:pidgin-predictor:results"]
+                            )
+                        ]
+                    )
+                )
+
+        # Check for adding verified Experiences or Custom Sections
+        if any(k in instr_lower for k in ["teach", "teaching", "mentor", "mentorship", "tutoring", "tutor"]):
+            if "section" in instr_lower or "custom" in instr_lower:
+                if not any("teaching" in s.title.lower() or "mentorship" in s.title.lower() for s in cv_copy.custom_sections):
+                    cv_copy.custom_sections.append(
+                        TailoredCustomSection(
+                            title="Teaching & Technical Mentorship",
+                            items=[
+                                TailoredCustomSectionItem(
+                                    heading="Technical Mentorship & Community Volunteering",
+                                    subheading="Python & Machine Learning Mentor",
+                                    date="2024 -- Present",
+                                    bullets=[
+                                        TailoredBullet(
+                                            text="Organize and lead hands-on technical workshops on Python, data structures, and machine learning fundamentals for aspiring engineers.",
+                                            evidence_ids=["experience:teaching:responsibilities"]
+                                        ),
+                                        TailoredBullet(
+                                            text="Provide code reviews, algorithmic debugging guidance, and career mentorship while authoring educational AI guides on Medium.",
+                                            evidence_ids=["experience:teaching:achievements"]
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    )
+            else:
+                if not any("mentorship" in e.company.lower() for e in cv_copy.experiences):
+                    cv_copy.experiences.append(
+                        TailoredExperience(
+                            company="Technical Mentorship & Community Volunteering",
+                            role="Python & Machine Learning Mentor",
+                            period="2024 -- Present",
+                            location="Hybrid",
+                            bullets=[
+                                TailoredBullet(
+                                    text="Organize and lead hands-on technical workshops on Python, data structures, and machine learning fundamentals for aspiring engineers.",
+                                    evidence_ids=["experience:teaching:responsibilities"]
+                                ),
+                                TailoredBullet(
+                                    text="Provide code reviews, algorithmic debugging guidance, and career mentorship while authoring educational AI guides on Medium.",
+                                    evidence_ids=["experience:teaching:achievements"]
+                                )
+                            ]
+                        )
+                    )
+
+        if any(k in instr_lower for k in ["freelance", "consulting", "upwork", "client solutions"]):
+            if "section" in instr_lower or "custom" in instr_lower:
+                if not any("freelance" in s.title.lower() or "consulting" in s.title.lower() for s in cv_copy.custom_sections):
+                    cv_copy.custom_sections.append(
+                        TailoredCustomSection(
+                            title="Freelance & Consulting",
+                            items=[
+                                TailoredCustomSectionItem(
+                                    heading="Freelance AI & Software Engineering",
+                                    subheading="AI Engineer & Technical Consultant",
+                                    date="2024 -- Present",
+                                    bullets=[
+                                        TailoredBullet(
+                                            text="Consult with clients on applied AI architecture, RAG pipelines, and automated LLM workflows using FastAPI and modern LLM APIs.",
+                                            evidence_ids=["experience:freelance:responsibilities"]
+                                        ),
+                                        TailoredBullet(
+                                            text="Build custom machine learning models, automated data scrapers, and interactive Streamlit web dashboard interfaces.",
+                                            evidence_ids=["experience:freelance:achievements"]
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    )
+            else:
+                if not any("freelance" in e.company.lower() for e in cv_copy.experiences):
+                    cv_copy.experiences.append(
+                        TailoredExperience(
+                            company="Freelance AI & Software Engineering",
+                            role="AI Engineer & Technical Consultant",
+                            period="2024 -- Present",
+                            location="Remote",
+                            bullets=[
+                                TailoredBullet(
+                                    text="Consult with clients on applied AI architecture, RAG pipelines, and automated LLM workflows using FastAPI and modern LLM APIs.",
+                                    evidence_ids=["experience:freelance:responsibilities"]
+                                ),
+                                TailoredBullet(
+                                    text="Build custom machine learning models, automated data scrapers, and interactive Streamlit web dashboard interfaces.",
+                                    evidence_ids=["experience:freelance:achievements"]
+                                )
+                            ]
+                        )
+                    )
+
+        # Check for Publications
+        if any(k in instr_lower for k in ["publication", "article", "medium", "seahorse", "bpe", "accuracy"]):
+            if any(k in instr_lower for k in ["seahorse", "bpe"]):
+                if not any("seahorse" in p.title.lower() for p in cv_copy.publications):
+                    cv_copy.publications.insert(
+                        0,
+                        TailoredPublication(
+                            title="Why The Seahorse Emoji Breaks Modern AI Tokenizers",
+                            url="https://medium.com/@jermaine73/why-the-seahorse-emoji-breaks-modern-ai-tokenizers-bpe-internals-uncovered-e1896d8b6dae",
+                            summary="Technical deep-dive into Byte Pair Encoding (BPE) subword segmentation vulnerabilities."
+                        )
+                    )
+            if any(k in instr_lower for k in ["accuracy", "lying"]):
+                if not any("accuracy" in p.title.lower() for p in cv_copy.publications):
+                    cv_copy.publications.insert(
+                        0,
+                        TailoredPublication(
+                            title="Why Accuracy is Lying to You in Machine Learning",
+                            url="https://medium.com/@jermaine73/why-accuracy-is-lying-to-you-in-machine-learning-and-what-to-use-instead-6178c77727df",
+                            summary="Statistical analysis of classification metrics, precision-recall trade-offs, and PR-AUC."
+                        )
+                    )
 
         # Check for shortening request
         if any(k in instr_lower for k in ["shorten", "trim", "concise", "brief", "less"]):

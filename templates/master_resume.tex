@@ -175,5 +175,26 @@
   \resumeSubHeadingListEnd
 ((* endif *))
 
+((* if custom_sections *))
+((* for sec in custom_sections *))
+%-----------((( sec.title )))-----------
+\section{((( sec.title )))}
+  \resumeSubHeadingListStart
+    ((* for item in sec['items'] *))
+    \resumeProjectHeading
+      {\textbf{((( item.heading )))}((* if item.subheading *)) $|$ \emph{((( item.subheading )))}((* endif *))}
+      {((( item.date )))}
+      ((* if item.bullets *))
+      \resumeItemListStart
+        ((* for bullet in item.bullets *))
+        \resumeItem{((( bullet.text )))}
+        ((* endfor *))
+      \resumeItemListEnd
+      ((* endif *))
+    ((* endfor *))
+  \resumeSubHeadingListEnd
+((* endfor *))
+((* endif *))
+
 %-------------------------------------------
 \end{document}

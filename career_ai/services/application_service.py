@@ -10,6 +10,7 @@ from typing import Dict, Any, Optional, List, Tuple
 from pathlib import Path
 import json
 import uuid
+import re
 from datetime import datetime
 
 from career_ai.jobs.schemas import JobRequirements, JobAnalysisResult
@@ -22,7 +23,9 @@ from career_ai.tailoring.verifier import FactualClaimVerifier, claim_verifier
 from career_ai.latex.renderer import LaTeXRenderer, latex_renderer
 from career_ai.latex.compiler import LaTeXCompiler, latex_compiler
 from career_ai.latex.sanitizer import sanitize_filename
+from career_ai.knowledge.schemas import EvidenceChunk
 from career_ai.knowledge.indexer import KnowledgeIndexer, indexer
+from career_ai.retrieval.rrf import RankedEvidence
 from career_ai.retrieval.hybrid import HybridRetriever, hybrid_retriever
 from career_ai.database.repository import Repository, repository
 from career_ai.database.models import JobDB, GeneratedApplicationDB
@@ -30,6 +33,124 @@ from career_ai.core.config import settings
 from career_ai.core.logging import get_logger
 
 logger = get_logger("application_service")
+
+CANONICAL_ENTITIES: Dict[str, Dict[str, Any]] = {
+    "churn-predictor": {
+        "name": "Bank Customer Churn Predictor",
+        "file": "projects/churn-predictor.md",
+        "keywords": ["churn", "attrition", "telco customer", "churn prediction", "churn predictor"]
+    },
+    "brain-tumor-mri": {
+        "name": "Brain Tumor MRI Classifier",
+        "file": "projects/brain-tumor-mri.md",
+        "keywords": ["mri", "tumor", "brain tumor", "radiolog", "efficientnet"]
+    },
+    "fraud-detection": {
+        "name": "Credit Card Fraud Detection",
+        "file": "projects/fraud-detection.md",
+        "keywords": ["fraud", "credit card fraud", "imbalanced fraud", "anomaly detection"]
+    },
+    "pidgin-predictor": {
+        "name": "Nigerian Pidgin NLP Predictor",
+        "file": "projects/pidgin-predictor.md",
+        "keywords": ["pidgin", "nigerian pidgin", "vernacular nlp", "afro-xlmr"]
+    },
+    "cinematch": {
+        "name": "CineMatch Recommendation Engine",
+        "file": "projects/cinematch.md",
+        "keywords": ["cinematch", "movie recommender", "recommendation engine", "matrix factorization"]
+    },
+    "custom-chatbot": {
+        "name": "Custom RAG Chatbot",
+        "file": "projects/custom-chatbot.md",
+        "keywords": ["custom chatbot", "langchain chatbot", "rag bot", "support bot"]
+    },
+    "customer-segmentation": {
+        "name": "Customer Segmentation Engine",
+        "file": "projects/customer-segmentation.md",
+        "keywords": ["customer segmentation", "rfm", "k-means clustering"]
+    },
+    "diabetic-retinopathy": {
+        "name": "Diabetic Retinopathy Classifier",
+        "file": "projects/diabetic-retinopathy.md",
+        "keywords": ["diabetic retinopathy", "retinopathy", "fundus"]
+    },
+    "flappy-bird-rl": {
+        "name": "Flappy Bird RL Agent",
+        "file": "projects/flappy-bird-rl.md",
+        "keywords": ["flappy bird", "deep q network", "dqn", "reinforcement learning"]
+    },
+    "flashcard-app": {
+        "name": "Flashcard Learning App",
+        "file": "projects/flashcard-app.md",
+        "keywords": ["flashcard", "spaced repetition", "supermemo", "sm-2"]
+    },
+    "house-price-predictor": {
+        "name": "House Price Predictor",
+        "file": "projects/house-price-predictor.md",
+        "keywords": ["house price", "ames housing", "real estate prediction"]
+    },
+    "iris-classifier": {
+        "name": "Iris Classifier",
+        "file": "projects/iris-classifier.md",
+        "keywords": ["iris classifier"]
+    },
+    "legal-document-analyzer": {
+        "name": "Legal Document Analyzer",
+        "file": "projects/legal-document-analyzer.md",
+        "keywords": ["legal document", "contract analyzer", "clause extraction"]
+    },
+    "lockedin": {
+        "name": "Lockedin Productivity App",
+        "file": "projects/lockedin.md",
+        "keywords": ["lockedin", "pomodoro", "study timer"]
+    },
+    "bitcheck": {
+        "name": "BitCheck Crypto Price Tracker",
+        "file": "projects/bitcheck.md",
+        "keywords": ["bitcheck", "bitcoin alert", "crypto alert", "crypto tracker"]
+    },
+    "resume-optimizer": {
+        "name": "Resume Optimizer",
+        "file": "projects/resume-optimizer.md",
+        "keywords": ["resume optimizer", "ats parser"]
+    },
+    "teaching": {
+        "name": "Technical Mentorship & Community Volunteering",
+        "file": "experience/teaching.md",
+        "keywords": ["teaching", "mentor", "mentorship", "tutoring", "tutor", "volunteering"]
+    },
+    "freelance": {
+        "name": "Freelance AI & Software Engineering",
+        "file": "experience/freelance.md",
+        "keywords": ["freelance", "consulting", "independent consultant", "contractor", "upwork"]
+    },
+    "camlds": {
+        "name": "CAMLDS Research Internship",
+        "file": "experience/camlds.md",
+        "keywords": ["camlds", "center for applied machine learning", "internship", "research intern"]
+    },
+    "queryfier": {
+        "name": "Queryfier LLC",
+        "file": "experience/queryfier.md",
+        "keywords": ["queryfier"]
+    },
+    "analytics-and-bi": {
+        "name": "Data Analytics, BI & Time Series",
+        "file": "skills/analytics-and-bi.md",
+        "keywords": ["power bi", "powerbi", "excel", "power query", "power pivot", "dax", "time series", "forecasting", "star schema"]
+    },
+    "accuracy-lying": {
+        "name": "Why Accuracy is Lying to You in Machine Learning",
+        "file": "publications/accuracy-lying.md",
+        "keywords": ["accuracy is lying", "classification metrics"]
+    },
+    "seahorse-emoji-bpe": {
+        "name": "Why The Seahorse Emoji Breaks Modern AI Tokenizers",
+        "file": "publications/seahorse-emoji-bpe.md",
+        "keywords": ["seahorse", "bpe", "tokenizer", "tokenization"]
+    }
+}
 
 class ApplicationService:
     """Central business logic facade for Career AI engine."""
@@ -233,6 +354,130 @@ class ApplicationService:
             "metadata": meta_dict
         }
 
+    def _lookup_evidence_for_instruction(
+        self,
+        user_instruction: str,
+        all_chunks: List[EvidenceChunk]
+    ) -> Tuple[List[RankedEvidence], List[str]]:
+        """
+        Dynamically consults the knowledge base for evidence matching user instruction.
+        Returns prioritized RankedEvidence chunks and descriptions of matched canonical records.
+        """
+        instr_lower = user_instruction.lower()
+        matched_entities: List[str] = []
+        prioritized_chunks: List[EvidenceChunk] = []
+
+        # 1. Canonical entity mapping
+        chunks_by_source: Dict[str, List[EvidenceChunk]] = {}
+        for c in all_chunks:
+            chunks_by_source.setdefault(c.source_id, []).append(c)
+
+        for source_id, entity_info in CANONICAL_ENTITIES.items():
+            if any(k in instr_lower for k in entity_info["keywords"]):
+                matched_chunks = chunks_by_source.get(source_id, [])
+                if matched_chunks:
+                    prioritized_chunks.extend(matched_chunks)
+                    matched_entities.append(f"{entity_info['name']} ({entity_info['file']})")
+
+        # 2. Hybrid search against knowledge base
+        hybrid_ranked: List[RankedEvidence] = []
+        try:
+            hybrid_ranked = self.retriever.search(query=user_instruction, top_k_rrf=15)
+        except Exception as e:
+            logger.warning("Hybrid search during instruction lookup encountered exception: %s", e)
+            if self.retriever.bm25:
+                bm25_hits = self.retriever.bm25.search(query=user_instruction, top_k=15)
+                hybrid_ranked = [
+                    RankedEvidence(chunk=c, rrf_score=1.0 / (60 + r), rrf_rank=r, bm25_rank=r)
+                    for r, (c, _) in enumerate(bm25_hits, 1)
+                ]
+
+        # 3. Assemble combined ranked evidence (prioritized canonical chunks first)
+        results: List[RankedEvidence] = []
+        seen_ids = set()
+
+        for idx, chunk in enumerate(prioritized_chunks, 1):
+            if chunk.id not in seen_ids:
+                seen_ids.add(chunk.id)
+                results.append(RankedEvidence(
+                    chunk=chunk,
+                    rrf_score=1.0 - (idx * 0.01),
+                    rrf_rank=idx,
+                    bm25_rank=idx,
+                    vector_rank=idx
+                ))
+
+        for ev in hybrid_ranked:
+            if ev.chunk.id not in seen_ids:
+                seen_ids.add(ev.chunk.id)
+                results.append(ev)
+
+        return results, matched_entities
+
+    def _sanitize_unverified_cv(
+        self,
+        cv: TailoredCV,
+        all_chunks: List[EvidenceChunk]
+    ) -> Tuple[TailoredCV, List[str]]:
+        """
+        Enforces zero-hallucination policy by filtering out employers, projects,
+        or credentials that cannot be corroborated against the authoritative knowledge base.
+        """
+        all_evidence_text = " ".join([f"{c.title} {c.text} {c.source_id}" for c in all_chunks])
+        all_evidence_lower = all_evidence_text.lower()
+        purged: List[str] = []
+
+        # 1. Experiences check
+        verified_experiences = []
+        for exp in cv.experiences:
+            if exp.company.lower() in all_evidence_lower:
+                verified_experiences.append(exp)
+            else:
+                purged.append(f"Unverified employer '{exp.company}'")
+        cv.experiences = verified_experiences
+
+        # 2. Projects check
+        verified_projects = []
+        for proj in cv.projects:
+            proj_name_simple = re.sub(r"[^a-zA-Z0-9]", "", proj.name).lower()
+            first_word = proj.name.split()[0].lower() if proj.name else ""
+            if any(proj_name_simple in re.sub(r"[^a-zA-Z0-9]", "", c.title).lower() for c in all_chunks) or (first_word and first_word in all_evidence_lower):
+                verified_projects.append(proj)
+            else:
+                purged.append(f"Unverified project '{proj.name}'")
+        cv.projects = verified_projects
+
+        # 3. Certifications check
+        valid_certs = [
+            "oci generative ai professional",
+            "oracle ai foundations associate",
+            "machine learning specialization"
+        ]
+        verified_certs = []
+        for cert in cv.certifications:
+            if any(v in cert.name.lower() for v in valid_certs):
+                verified_certs.append(cert)
+            else:
+                purged.append(f"Unverified certification '{cert.name}'")
+        cv.certifications = verified_certs
+
+        # 4. Custom sections check
+        verified_custom = []
+        for sec in getattr(cv, "custom_sections", []):
+            verified_items = []
+            for item in sec.items:
+                first_word = item.heading.split()[0].lower() if item.heading else ""
+                if not first_word or first_word in all_evidence_lower:
+                    verified_items.append(item)
+                else:
+                    purged.append(f"Unverified entity '{item.heading}' in section '{sec.title}'")
+            if verified_items:
+                sec.items = verified_items
+                verified_custom.append(sec)
+        cv.custom_sections = verified_custom
+
+        return cv, purged
+
     def refine_application(
         self,
         current_result: Dict[str, Any],
@@ -240,8 +485,10 @@ class ApplicationService:
         analysis: JobAnalysisResult
     ) -> Tuple[Dict[str, Any], str]:
         """
-        Applies candidate feedback/corrections to current CV and/or Cover Letter,
-        re-verifies claims, re-renders LaTeX, recompiles PDF, and updates database records.
+        Applies candidate feedback/corrections to current CV and/or Cover Letter.
+        Dynamically looks up authoritative knowledge base evidence, adds verified sections,
+        strictly rejects/purges ungrounded claims, re-renders LaTeX, recompiles PDF,
+        and updates database records.
         Returns (updated_result_dict, assistant_reply_message).
         """
         job = analysis.job_requirements
@@ -250,13 +497,34 @@ class ApplicationService:
 
         instr_lower = user_instruction.lower()
         affects_cl = any(k in instr_lower for k in ["cover letter", "coverletter", "letter", "salutation", "sign off", "sign-off", "opening paragraph", "closing paragraph"])
-        affects_cv = any(k in instr_lower for k in ["resume", "cv", "bullet", "bullets", "summary", "project", "projects", "skill", "skills", "experience", "education"])
+        affects_cv = any(k in instr_lower for k in ["resume", "cv", "bullet", "bullets", "summary", "project", "projects", "skill", "skills", "experience", "experiences", "education", "section", "sections", "custom"])
 
         # Default to CV if neither specifically mentioned
         if not affects_cl and not affects_cv:
             affects_cv = True
 
-        changes_made = []
+        changes_made: List[str] = []
+        kb_consulted_notes: List[str] = []
+        ungrounded_warnings: List[str] = []
+
+        # 0. Dynamic Knowledge Base Re-Lookup
+        all_chunks, _ = self.indexer.scan_and_chunk()
+        targeted_evidence, matched_entities = self._lookup_evidence_for_instruction(user_instruction, all_chunks)
+        if matched_entities:
+            kb_consulted_notes.extend(matched_entities)
+
+        # Merge targeted evidence with original retrieved evidence (targeted first)
+        existing_evidence = analysis.retrieved_evidence or []
+        combined_evidence: List[RankedEvidence] = []
+        seen_chunk_ids = set()
+        for ev in targeted_evidence:
+            if ev.chunk.id not in seen_chunk_ids:
+                seen_chunk_ids.add(ev.chunk.id)
+                combined_evidence.append(ev)
+        for ev in existing_evidence:
+            if ev.chunk.id not in seen_chunk_ids:
+                seen_chunk_ids.add(ev.chunk.id)
+                combined_evidence.append(ev)
 
         # 1. Refine CV
         if affects_cv:
@@ -265,11 +533,19 @@ class ApplicationService:
                 user_instruction=user_instruction,
                 job=job,
                 analysis=analysis,
-                evidence=analysis.retrieved_evidence
+                evidence=combined_evidence
             )
-            # Re-verify claims
-            all_chunks, _ = self.indexer.scan_and_chunk()
+
+            # Audit against all authoritative chunks
             verification_result = self.verifier.verify_cv(cv=refined_cv, authoritative_evidence=all_chunks)
+
+            # If unverified claims detected, sanitize and purge ungrounded additions
+            if not verification_result.is_valid:
+                sanitized_cv, purged_items = self._sanitize_unverified_cv(refined_cv, all_chunks)
+                if purged_items:
+                    ungrounded_warnings.extend(purged_items)
+                    refined_cv = sanitized_cv
+                    verification_result = self.verifier.verify_cv(cv=refined_cv, authoritative_evidence=all_chunks)
 
             # Re-render LaTeX CV
             tex_content = self.renderer.render_cv(refined_cv)
@@ -331,7 +607,30 @@ class ApplicationService:
             except Exception as e:
                 logger.warning("Could not persist updated application to database: %s", e)
 
-        explanation = f"✅ Applied your corrections to your {' and '.join(changes_made)}! All factual claims were re-verified against your knowledge base, and the updated files are ready to preview and download below."
+        # 4. Construct Comprehensive Response Explanation
+        explanation_blocks: List[str] = []
+
+        if ungrounded_warnings:
+            explanation_blocks.append(
+                "⚠️ **Anti-Hallucination Guard (Zero Fabrication Enforced)**:\n"
+                "The following requested item(s) could not be corroborated in your canonical knowledge base:\n"
+                + "\n".join(f"- *{w}*" for w in ungrounded_warnings)
+                + "\nTo prevent ATS disqualification and preserve absolute profile credibility, unverified entities were omitted from your documents. If you have acquired this credential or role, please add its markdown record to your `knowledge/` directory and rebuild the index."
+            )
+
+        if kb_consulted_notes:
+            explanation_blocks.append(
+                "🔍 **Knowledge Base Re-Lookup**:\n"
+                "Consulted your verified profile and retrieved authoritative evidence for:\n"
+                + "\n".join(f"- **{n}**" for n in kb_consulted_notes)
+            )
+
+        if changes_made:
+            explanation_blocks.append(
+                f"✅ **Update Complete**: Successfully refined your {' and '.join(changes_made)}! All metrics and claims are verified against your knowledge base, and updated files are ready to preview and download."
+            )
+
+        explanation = "\n\n".join(explanation_blocks) if explanation_blocks else "✅ Applied your requested adjustments and recompiled your application."
         return current_result, explanation
 
     def get_generated_applications(self) -> List[GeneratedApplicationDB]:

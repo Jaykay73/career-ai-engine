@@ -48,6 +48,17 @@ class TailoredCertification(BaseModel):
     issuer: str
     date: str = "2024"
 
+class TailoredCustomSectionItem(BaseModel):
+    heading: str
+    subheading: Optional[str] = ""
+    date: Optional[str] = ""
+    bullets: List[TailoredBullet] = Field(default_factory=list)
+    evidence_ids: List[str] = Field(default_factory=list)
+
+class TailoredCustomSection(BaseModel):
+    title: str  # e.g., "Teaching & Mentorship", "Freelance & Consulting", "Leadership & Open Source"
+    items: List[TailoredCustomSectionItem] = Field(default_factory=list)
+
 class TailoredCV(BaseModel):
     full_name: str = "John Aledare"
     headline: str = "AI Engineer | Machine Learning Engineer"
@@ -67,6 +78,7 @@ class TailoredCV(BaseModel):
     experiences: List[TailoredExperience] = Field(default_factory=list)
     projects: List[TailoredProject] = Field(default_factory=list)
     publications: List[TailoredPublication] = Field(default_factory=list)
+    custom_sections: List[TailoredCustomSection] = Field(default_factory=list)
 
 class CoverLetter(BaseModel):
     company_name: str

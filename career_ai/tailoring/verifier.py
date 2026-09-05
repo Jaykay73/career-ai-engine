@@ -41,7 +41,7 @@ class FactualClaimVerifier:
                 unsupported.append(f"FORBIDDEN: Degree classification or GPA detected in education: '{pattern}'")
 
         # 2. Build authoritative token and metric sets from verified chunks
-        all_evidence_text = " ".join([c.text for c in authoritative_evidence])
+        all_evidence_text = " ".join([f"{c.title} {c.text} {c.source_id}" for c in authoritative_evidence])
         all_evidence_lower = all_evidence_text.lower()
 
         # Extract numerical metrics from generated bullets (e.g. 35%, 140k, 100ms)
@@ -86,6 +86,18 @@ class FactualClaimVerifier:
         for cert in cv.certifications:
             if not any(v in cert.name.lower() for v in valid_certs):
                 unsupported.append(f"Unverified certification: '{cert.name}'")
+
+        # 6. Audit Custom Sections
+        for sec in getattr(cv, "custom_sections", []):
+            for item in sec.items:
+                first_word = item.heading.split()[0].lower() if item.heading else ""
+                if first_word and first_word not in all_evidence_lower:
+                    unsupported.append(f"Unverified entity '{item.heading}' in custom section '{sec.title}' not found in knowledge base.")
+                for bullet in item.bullets:
+                    metrics_found = metric_pattern.findall(bullet.text)
+                    for m in metrics_found:
+                        if m.lower() not in all_evidence_lower:
+                            unsupported.append(f"Fabricated metric '{m}' in custom section '{sec.title}': \"{bullet.text}\"")
 
         is_valid = len(unsupported) == 0
         if not is_valid:
