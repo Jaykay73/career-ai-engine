@@ -35,66 +35,100 @@ Requirements:
 def render_job_application():
     st.markdown("## 💼 Job Application Generator")
     st.markdown(
-        "Paste a job description below. The engine extracts requirements, performs hybrid BM25 + Vector retrieval "
-        "with Reciprocal Rank Fusion against John Aledare's canonical knowledge base, and outputs an evidence-grounded ATS-tailored application."
+        "Paste any raw job description below. The engine automatically detects the **Role / Job Title** and **Company Name**, "
+        "retrieves grounded evidence from John Aledare's canonical knowledge base via BM25 + Dense Vectors (RRF), "
+        "and generates a tailored ATS resume and cover letter."
     )
 
-    # Pre-fill sample button
-    col_prefill, col_clear = st.columns([2, 8])
-    with col_prefill:
-        if st.button("📋 Load Sample JD", help="Loads a sample Machine Learning Engineer job description"):
-            st.session_state["input_job_title"] = SAMPLE_JOB_TITLE
-            st.session_state["input_company"] = SAMPLE_COMPANY
+    # 1. Primary Input: Job Description Textarea
+    jd_text = st.text_area(
+        "📋 Job Description (Paste raw text here) *",
+        value=st.session_state.get("input_jd", ""),
+        height=260,
+        placeholder="Paste full job posting text here (from LinkedIn, Indeed, Greenhouse, Lever, etc.)..."
+    )
+
+    # Action Toolbar
+    col_analyze, col_detect, col_sample, col_clear = st.columns([3, 2, 2, 1])
+
+    with col_sample:
+        if st.button("📋 Load Sample JD", use_container_width=True, help="Loads a sample Machine Learning Engineer job posting"):
             st.session_state["input_jd"] = SAMPLE_JD
+            metadata = application_service.extract_job_metadata(SAMPLE_JD)
+            st.session_state["input_job_title"] = metadata.get("job_title", SAMPLE_JOB_TITLE)
+            st.session_state["input_company"] = metadata.get("company_name", SAMPLE_COMPANY)
             st.session_state.pop("analysis_result", None)
             st.session_state.pop("generation_result", None)
             st.rerun()
 
-    # Form inputs
-    with st.container():
-        c1, c2 = st.columns(2)
-        with c1:
-            job_title = st.text_input(
-                "Job Title *",
-                value=st.session_state.get("input_job_title", ""),
-                placeholder="e.g. Senior Machine Learning Engineer"
-            )
-        with c2:
-            company_name = st.text_input(
-                "Company Name *",
-                value=st.session_state.get("input_company", ""),
-                placeholder="e.g. Alpha Health AI"
-            )
+    with col_detect:
+        if st.button("⚡ Extract Role & Company", use_container_width=True, help="Auto-extracts company name and job title from the text"):
+            if jd_text.strip():
+                metadata = application_service.extract_job_metadata(jd_text)
+                st.session_state["input_job_title"] = metadata.get("job_title", "")
+                st.session_state["input_company"] = metadata.get("company_name", "")
+                st.session_state["input_jd"] = jd_text
+                st.success(f"Extracted: **{metadata.get('job_title')}** at **{metadata.get('company_name')}**")
+                st.rerun()
+            else:
+                st.warning("Please paste a job description first.")
 
+    with col_clear:
+        if st.button("🧹 Clear", use_container_width=True, help="Clears the current input"):
+            st.session_state.pop("input_jd", None)
+            st.session_state.pop("input_job_title", None)
+            st.session_state.pop("input_company", None)
+            st.session_state.pop("input_company_url", None)
+            st.session_state.pop("input_job_url", None)
+            st.session_state.pop("analysis_result", None)
+            st.session_state.pop("generation_result", None)
+            st.rerun()
+
+    with col_analyze:
+        analyze_btn = st.button("🔍 Step 1: Analyze & Match Evidence", type="primary", use_container_width=True)
+
+    # 2. Extracted / Inferred Role & Company (Editable)
+    # Auto-extract if text is present and fields are empty
+    if jd_text.strip() and not st.session_state.get("input_job_title"):
+        auto_meta = application_service.extract_job_metadata(jd_text)
+        st.session_state["input_job_title"] = auto_meta.get("job_title", "")
+        st.session_state["input_company"] = auto_meta.get("company_name", "")
+
+    st.markdown("##### 🏢 Role & Company (Auto-Extracted)")
+    c1, c2 = st.columns(2)
+    with c1:
+        job_title = st.text_input(
+            "Role / Job Title",
+            value=st.session_state.get("input_job_title", ""),
+            placeholder="Auto-detected from job text (e.g. Senior Machine Learning Engineer)"
+        )
+    with c2:
+        company_name = st.text_input(
+            "Company Name",
+            value=st.session_state.get("input_company", ""),
+            placeholder="Auto-detected from job text (e.g. Alpha Health AI)"
+        )
+
+    # Optional URLs expander
+    with st.expander("🔗 Additional Job Links (Optional)", expanded=False):
         c3, c4 = st.columns(2)
         with c3:
             company_url = st.text_input(
-                "Company Website / Careers URL (optional)",
+                "Company Website URL",
                 value=st.session_state.get("input_company_url", ""),
-                placeholder="https://alphahealth.ai"
+                placeholder="https://company.com"
             )
         with c4:
             job_url = st.text_input(
-                "Job Posting URL (optional)",
+                "Job Posting URL",
                 value=st.session_state.get("input_job_url", ""),
                 placeholder="https://linkedin.com/jobs/view/..."
             )
 
-        jd_text = st.text_area(
-            "Job Description (Raw Text) *",
-            value=st.session_state.get("input_jd", ""),
-            height=240,
-            placeholder="Paste complete job description text here..."
-        )
-
-    # Step 1: Analyze Job Posting Action
-    analyze_col, _ = st.columns([2, 6])
-    with analyze_col:
-        analyze_btn = st.button("🔍 Step 1: Analyze & Match Evidence", type="primary", use_container_width=True)
-
+    # Step 1: Analyze Execution
     if analyze_btn:
         if not jd_text.strip():
-            st.error("Please provide job description text to analyze.")
+            st.error("Please paste a job description into the box above.")
             return
 
         with st.spinner("Extracting requirements and performing BM25 + Dense Hybrid RRF Retrieval..."):
@@ -103,13 +137,17 @@ def render_job_application():
                     job_description=jd_text,
                     company_name=company_name.strip() or None,
                     job_title=job_title.strip() or None,
-                    company_url=company_url.strip() or None,
-                    job_url=job_url.strip() or None
+                    company_url=company_url.strip() if 'company_url' in locals() and company_url else None,
+                    job_url=job_url.strip() if 'job_url' in locals() and job_url else None
                 )
+                # Sync back extracted values to session state
+                st.session_state["input_job_title"] = analysis.job_requirements.job_title
+                st.session_state["input_company"] = analysis.job_requirements.company_name
                 st.session_state["analysis_result"] = analysis
                 st.session_state["last_jd"] = jd_text
                 st.session_state.pop("generation_result", None)
-                st.success("Job Analysis & Evidence Grounding Complete!")
+                st.success(f"Matched evidence for **{analysis.job_requirements.job_title}** at **{analysis.job_requirements.company_name}**!")
+                st.rerun()
             except Exception as e:
                 st.error(f"Analysis failed: {str(e)}")
                 return

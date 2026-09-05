@@ -87,7 +87,13 @@ class ApplicationService:
             "latex_available": self.compiler.is_available()
         }
 
-    # --- Job Analysis ---
+    # --- Job Analysis & Extraction ---
+    def extract_job_metadata(self, job_description: str) -> Dict[str, str]:
+        """Auto-extracts role title and company name from raw job posting text."""
+        from career_ai.jobs.parser import extract_title_and_company
+        title, company = extract_title_and_company(job_description)
+        return {"job_title": title, "company_name": company}
+
     def analyze_job_posting(
         self,
         job_description: str,
