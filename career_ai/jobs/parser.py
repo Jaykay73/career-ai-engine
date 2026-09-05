@@ -172,14 +172,43 @@ class JobParser:
             "python", "pytorch", "tensorflow", "scikit-learn", "fastapi", "docker",
             "kubernetes", "rag", "vector search", "faiss", "nlp", "computer vision",
             "sql", "c++", "typescript", "javascript", "aws", "gcp", "onnx", "opencv",
-            "deepseek", "gemini", "langchain", "prompt engineering", "streamlit", "qdrant"
+            "deepseek", "gemini", "langchain", "prompt engineering", "streamlit", "qdrant",
+            "power bi", "powerbi", "excel", "power query", "power pivot", "dax",
+            "time series", "forecasting", "data analytics", "business intelligence", "arima", "sarima"
         ]
+
+        display_names = {
+            "power bi": "Power BI",
+            "powerbi": "Power BI",
+            "excel": "Microsoft Excel",
+            "power query": "Power Query",
+            "power pivot": "Power Pivot",
+            "dax": "DAX",
+            "time series": "Time Series Modeling",
+            "forecasting": "Forecasting",
+            "data analytics": "Data Analytics",
+            "business intelligence": "Business Intelligence",
+            "arima": "ARIMA",
+            "sarima": "SARIMA",
+            "sql": "SQL",
+            "c++": "C++",
+            "aws": "AWS",
+            "gcp": "GCP",
+            "onnx": "ONNX",
+            "opencv": "OpenCV",
+            "nlp": "NLP",
+            "rag": "RAG",
+            "faiss": "FAISS",
+            "qdrant": "Qdrant",
+        }
 
         found_skills = []
         text_lower = text.lower()
         for kw in tech_keywords:
             if kw in text_lower:
-                found_skills.append(kw.title() if len(kw) > 3 else kw.upper())
+                name = display_names.get(kw, kw.title() if len(kw) > 3 else kw.upper())
+                if name not in found_skills:
+                    found_skills.append(name)
 
         return JobRequirements(
             company_name=inferred_company,
@@ -189,10 +218,16 @@ class JobParser:
             role_summary=lines[0] if lines else f"{inferred_title} at {inferred_company}",
             responsibilities=lines[1:6] if len(lines) > 5 else lines,
             required_skills=found_skills,
-            programming_languages=[s for s in found_skills if s.lower() in ["python", "c++", "typescript", "javascript", "sql"]],
-            frameworks=[s for s in found_skills if s.lower() in ["pytorch", "tensorflow", "scikit-learn", "fastapi", "opencv", "onnx", "keras"]],
+            programming_languages=[s for s in found_skills if s.lower() in ["python", "c++", "typescript", "javascript", "sql", "dax"]],
+            frameworks=[s for s in found_skills if s.lower() in [
+                "pytorch", "tensorflow", "scikit-learn", "fastapi", "opencv", "onnx", "keras",
+                "power bi", "power query", "power pivot", "microsoft excel", "excel"
+            ]],
             infrastructure_and_cloud=[s for s in found_skills if s.lower() in ["docker", "kubernetes", "aws", "gcp"]],
-            ml_domains=[s for s in found_skills if s.lower() in ["nlp", "computer vision", "rag", "vector search"]]
+            ml_domains=[s for s in found_skills if s.lower() in [
+                "nlp", "computer vision", "rag", "vector search",
+                "time series modeling", "forecasting", "data analytics", "business intelligence", "arima", "sarima"
+            ]]
         )
 
     @property

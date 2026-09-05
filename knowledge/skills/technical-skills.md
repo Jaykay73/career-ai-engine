@@ -60,6 +60,21 @@ categories:
     - "Vercel"
     - "Hugging Face Spaces"
     - "Streamlit"
+  data_analytics_and_bi:
+    - "Power BI (Data Modeling, DAX, Interactive Dashboards, KPI Reporting)"
+    - "Microsoft Excel (Power Query ETL, Power Pivot, Relational Modeling, Dynamic Arrays, PivotTables)"
+    - "Power Query (Automated ETL, Data Cleansing, M Query Language)"
+    - "Power Pivot (xVelocity Engine, Star Schema Modeling, Relational Analytics)"
+    - "Data Analytics (Exploratory Data Analysis, Metric Trees, Cohort & Retention Analysis, Hypothesis Testing)"
+    - "Business Intelligence & Executive Data Storytelling"
+  time_series_and_forecasting:
+    - "Time Series Modeling (ARIMA, SARIMA, Auto-ARIMA)"
+    - "Exponential Smoothing (Holt-Winters, ETS)"
+    - "Trend & Seasonality Decomposition (Additive & Multiplicative)"
+    - "Stationarity Testing (ADF Test, KPSS) & Differencing"
+    - "Autocorrelation Diagnostics (ACF, PACF)"
+    - "Temporal Feature Engineering (Lag Features, Rolling Window Statistics)"
+    - "Forecast Accuracy Metrics (MAE, RMSE, MAPE, MASE)"
   frontend_and_ui:
     - "React 19"
     - "Next.js"
@@ -71,10 +86,16 @@ categories:
 # Technical Skills Taxonomy
 
 ## Languages
-Python (Advanced), C++, JavaScript (ES6+), TypeScript, SQL (PostgreSQL, SQLite).
+Python (Advanced), C++, JavaScript (ES6+), TypeScript, SQL (PostgreSQL, SQLite), DAX.
 
 ## Frameworks & Deep Learning
 PyTorch, TensorFlow, Scikit-learn, ONNX, ONNX Runtime, Keras, OpenCV, Hugging Face Transformers, Transfer Learning, Model Quantization.
+
+## Data Analytics & Business Intelligence
+Power BI (Data Modeling, DAX Measures & Calculated Columns, Interactive Dashboards, Star Schema, Drill-Downs, KPI Reporting), Microsoft Excel (Power Query Automated ETL, Power Pivot Tabular Modeling, Advanced Formulas, PivotTables), Exploratory Data Analysis (EDA), Cohort & Retention Analysis, Metric Trees, Executive Reporting & Data Storytelling.
+
+## Time Series Modeling & Forecasting
+ARIMA, SARIMA, Auto-ARIMA, Exponential Smoothing (Holt-Winters, ETS), Additive and Multiplicative Seasonality Decomposition, Stationarity Testing (Augmented Dickey-Fuller / ADF, KPSS), Autocorrelation & Partial Autocorrelation (ACF / PACF), Temporal Feature Engineering (Lags, Rolling Window Aggregations), Forecast Accuracy Evaluation (MAE, RMSE, MAPE).
 
 ## NLP, LLMs & Vector Search
 SentenceTransformers, FAISS, Pinecone, RAG Pipelines, LangChain, DeepSeek, Gemini, Vector Search, Prompt Engineering, LLM Evaluation, Agentic Workflows, NER, Tokenization.

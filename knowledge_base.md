@@ -7,10 +7,10 @@
 
 - **Full Name:** John Oluwaseun Aledare
 - **Preferred Names / Aliases:** Jermaine, Jaykay, John Aledare
-- **Primary Professional Titles:** AI Engineer, Machine Learning Engineer, Data Scientist
+- **Primary Professional Titles:** AI Engineer, Machine Learning Engineer, Data Scientist, Data & Analytics Specialist
 - **Geographic Base:** Nigeria
 - **Availability:** Open to remote, hybrid, full-time, contract, and international AI / ML engineering opportunities.
-- **Engineering Philosophy:** Driven by problem-solving algorithms; engineering is about systematically tackling critical real-world problems. Specializes in transforming machine learning research into production-grade systems, focusing on low-latency inference, model quantization, containerization, and intuitive interfaces.
+- **Engineering Philosophy:** Driven by problem-solving algorithms; engineering is about systematically tackling critical real-world problems. Specializes in transforming machine learning research and statistical analytics into production-grade systems, focusing on robust data pipelines, low-latency inference, model quantization, containerization, and intuitive interfaces.
 
 ### Contact Information & Verified Links
 - **Email:** [aledareoluwaseunjohn@gmail.com](mailto:aledareoluwaseunjohn@gmail.com)
@@ -59,7 +59,9 @@
 
 | Category | Technologies & Tools |
 | :--- | :--- |
-| **Programming Languages** | Python (Advanced), C++, JavaScript (ES6+), TypeScript, SQL (PostgreSQL, SQLite) |
+| **Programming Languages** | Python (Advanced), C++, JavaScript (ES6+), TypeScript, SQL (PostgreSQL, SQLite), DAX |
+| **Data Analytics & BI** | Power BI (Data Modeling, DAX Measures, Star Schema, KPI Dashboards), Microsoft Excel (Power Query ETL, Power Pivot Tabular Modeling, PivotTables, Dynamic Arrays), Exploratory Data Analysis (EDA), Cohort & Retention Analysis, Metric Trees, Executive Storytelling |
+| **Time Series & Forecasting** | ARIMA, SARIMA, Auto-ARIMA, Exponential Smoothing (Holt-Winters, ETS), Trend & Seasonality Decomposition, Stationarity Testing (ADF, KPSS), Autocorrelation (ACF/PACF), Temporal Feature Engineering (Lags, Rolling Statistics), Walk-Forward Validation (MAE, RMSE, MAPE) |
 | **Deep Learning & ML Frameworks** | PyTorch, TensorFlow, Keras, Scikit-learn, ONNX, ONNX Runtime, Model Quantization (INT8 / FP16), Transfer Learning |
 | **NLP, LLMs & Vector Search** | SentenceTransformers, FAISS, Pinecone, RAG Pipelines, LangChain, Google Gemini 2.0 Flash, DeepSeek LLM, OpenAI API, NER, Text Classification, Tokenization |
 | **Computer Vision & Forensics** | EfficientNet (B0), OpenCV, Tesseract OCR, C2PA Content Credentials (`c2patool`), Grad-CAM Explainability, Metadata Forensics (EXIF/XMP) |
