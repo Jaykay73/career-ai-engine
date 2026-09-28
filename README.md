@@ -11,7 +11,7 @@ Unlike generic chatbot wrappers or resume rewriters, this engine strictly ground
 ```
                  ┌────────────────────────────────────────┐
                  │  Canonical Knowledge Base (Markdown)   │
-                 │  - 28 Authoritative Markdown Files     │
+                 │  - 33 Authoritative Markdown Files     │
                  │  - YAML Frontmatter + Structured Chunks│
                  └───────────────────┬────────────────────┘
                                      │
@@ -255,6 +255,58 @@ def generate_app(payload: JobGenerationRequest):
 ```
 
 A modern React/Next.js frontend can connect to these endpoints for production multi-user deployments.
+
+---
+
+## 🤖 Flagship Cyber-Physical Project: Autonomous Intelligent Lawn Mower
+
+The repository features comprehensive canonical records for the **Intelligent System for Lawn Mowers (Autonomous Intelligent Lawn Mower)**:
+- **Layered Cyber-Physical Architecture**: Decouples high-level perception and navigation on a Raspberry Pi 4 (4 GB RAM) from low-level safety-critical motor control on an independent ATmega microcontroller.
+- **Fail-Safe Watchdog Protection**: Continuous ~500 ms heartbeat protocol between Raspberry Pi and ATmega; any OS freeze or software crash immediately trips the fail-safe state, shutting off the 12V 755 drive motors.
+- **Multi-Sensor Fusion**: Combines 3× forward ultrasonic sensors for proximity detection, MPU6050 6-DOF IMU for orientation and angular motion, and drive wheel odometry.
+- **Edge Computer Vision**: Deploys lightweight YOLOv26n nano model quantized with INT8 via TensorFlow Lite for low-latency on-device obstacle detection.
+- **Target Specifications**: >95% obstacle avoidance, 4–5 kg payload chassis, manual override, and physical emergency stop.
+
+---
+
+## 🛠️ CLI Operational Suite
+
+Career AI Engine includes command-line tools for local inspection, testing, and synchronization:
+
+```powershell
+# 1. Inspect knowledge base inventory & database statistics
+python -m career_ai.cli stats
+
+# 2. Execute hybrid BM25 + dense vector query
+python -m career_ai.cli query "autonomous lawn mower watchdog heartbeat"
+
+# 3. Verify retrieval accuracy for robotics and edge AI domains
+python -m career_ai.cli verify-robotics
+
+# 4. Synchronize canonical Markdown records and audit index health
+python scripts/sync_knowledge.py --check
+python scripts/sync_knowledge.py --reindex
+```
+
+---
+
+## 🧪 Comprehensive Automated Test Suite
+
+Run the full automated test suite covering parsing, retrieval, verification, and end-to-end pipeline:
+
+```powershell
+pytest -v
+```
+
+Tests cover:
+- **`tests/test_robotics_parser.py`**: Schema compliance, section extraction, and chunk generation for the autonomous mower project.
+- **`tests/test_robotics_retrieval.py`**: BM25 ranking, technical compound token extraction, and RRF fusion for hardware queries.
+- **`tests/test_bm25.py`**: Lexical scoring and tokenization invariants.
+- **`tests/test_rrf.py`**: Reciprocal rank fusion mathematical correctness.
+- **`tests/test_verifier.py`**: Adversarial claim verifier, metric grounding, and degree privacy rules.
+- **`tests/test_latex.py`**: Safe Jinja2 escaping and template rendering.
+- **`tests/test_refinement.py`**: Real-time AI chatbox adjustments and anti-hallucination re-verification.
+- **`tests/test_end_to_end.py`**: Complete pipeline orchestration from raw job posting to verified tailored application.
 
 ---
 
