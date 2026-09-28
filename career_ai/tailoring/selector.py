@@ -56,10 +56,27 @@ class EvidenceSelector:
             project_chunks.setdefault(pid, []).append(hit)
 
         # Fallback to standard showcase projects if too few returned
-        preferred_order = ["bitcheck", "resume-optimizer", "lockedin", "cinematch", "pidgin-predictor", "brain-tumor-mri", "diabetic-retinopathy", "fraud-detection"]
+        preferred_order = [
+            "bitcheck",
+            "autonomous-lawn-mower",
+            "resume-optimizer",
+            "lockedin",
+            "cinematch",
+            "pidgin-predictor",
+            "brain-tumor-mri",
+            "diabetic-retinopathy",
+            "fraud-detection"
+        ]
         for p in preferred_order:
             if p not in project_scores:
                 project_scores[p] = 0.001
+
+        # Check for robotics / embedded / edge hardware roles and boost domain-aligned projects
+        robotics_keywords = {"robot", "robotics", "embedded", "hardware", "edge", "iot", "sensor", "autonomous", "firmware", "microcontroller", "atmega", "raspberry"}
+        job_text_corpus = f"{job.job_title} {job.role_summary} {' '.join(job.all_target_skills)}".lower()
+        if any(kw in job_text_corpus for kw in robotics_keywords):
+            if "autonomous-lawn-mower" in project_scores:
+                project_scores["autonomous-lawn-mower"] += 1.0
 
         # Sort projects by relevance score
         sorted_pids = sorted(project_scores.keys(), key=lambda p: project_scores[p], reverse=True)
