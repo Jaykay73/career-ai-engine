@@ -13,11 +13,23 @@ from career_ai.core.logging import get_logger
 
 logger = get_logger("bm25")
 
-TOKEN_REGEX = re.compile(r"\w+")
+TECHNICAL_TOKEN_REGEX = re.compile(r"[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*|c\+\+|[a-zA-Z0-9]+")
 
 def tokenize(text: str) -> List[str]:
-    """Tokenizes text by lowercasing and splitting into alphanumeric words."""
-    return TOKEN_REGEX.findall(text.lower())
+    """
+    Tokenizes text by lowercasing and extracting alphanumeric and technical terms,
+    preserving compound identifiers (e.g., yolo-v26n, tflite, c++, mpu6050).
+    """
+    raw_tokens = [t.lower() for t in TECHNICAL_TOKEN_REGEX.findall(text)]
+    expanded: List[str] = []
+    for token in raw_tokens:
+        expanded.append(token)
+        # If token has hyphens or underscores, also preserve individual subparts
+        if "-" in token or "_" in token:
+            for subpart in re.split(r"[-_]", token):
+                if subpart and subpart != token:
+                    expanded.append(subpart)
+    return expanded
 
 class BM25Retriever:
     """Manages an in-memory BM25 index of EvidenceChunks with optional persistence."""
@@ -29,7 +41,7 @@ class BM25Retriever:
         self.bm25: Optional[BM25Okapi] = None
 
     def build_index(self, chunks: List[EvidenceChunk]) -> None:
-        """Builds BM25 index from a list of EvidenceChunk objects."""
+        """Builds BM25 index from a list of EvidenceChunk objects, including rich metadata."""
         if not chunks:
             logger.warning("Attempted to build BM25 index with empty chunk list.")
             self.chunks = []
@@ -38,10 +50,22 @@ class BM25Retriever:
             return
 
         self.chunks = list(chunks)
-        # Tokenize each chunk text including title and section for richer lexical match
+        # Tokenize each chunk text including title, section, and metadata fields for richer lexical match
+        corpus_texts: List[str] = []
+        for chunk in self.chunks:
+            meta_parts: List[str] = []
+            if chunk.metadata:
+                for k in ("technologies", "models", "frameworks", "keywords", "relevant_domains", "infrastructure"):
+                    val = chunk.metadata.get(k)
+                    if isinstance(val, list):
+                        meta_parts.extend(str(item) for item in val)
+                    elif isinstance(val, str):
+                        meta_parts.append(val)
+            meta_str = " ".join(meta_parts)
+            corpus_texts.append(f"{chunk.title} {chunk.section} {meta_str} {chunk.text}")
+
         self.tokenized_corpus = [
-            tokenize(f"{chunk.title} {chunk.section} {chunk.text}")
-            for chunk in self.chunks
+            tokenize(txt) for txt in corpus_texts
         ]
         self.bm25 = BM25Okapi(self.tokenized_corpus)
         logger.info("BM25 index built with %d documents.", len(self.chunks))
