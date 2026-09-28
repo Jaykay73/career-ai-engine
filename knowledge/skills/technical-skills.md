@@ -75,6 +75,16 @@ categories:
     - "Autocorrelation Diagnostics (ACF, PACF)"
     - "Temporal Feature Engineering (Lag Features, Rolling Window Statistics)"
     - "Forecast Accuracy Metrics (MAE, RMSE, MAPE, MASE)"
+  embedded_and_robotics:
+    - "Raspberry Pi 4 (4 GB RAM, MicroSD)"
+    - "ATmega Microcontrollers"
+    - "Watchdog Timers & Real-Time Heartbeat Protocols (~500 ms)"
+    - "Sensor Fusion (MPU6050 6-DOF IMU, 3× Ultrasonic Sensors)"
+    - "DC Motor Control (PWM, 755 12V Motors)"
+    - "Odometry & Dead Reckoning"
+    - "Edge AI & Model Quantization (INT8 TFLite, YOLOv26n)"
+    - "Fail-Safe Safety Systems & Hardware Emergency Stop"
+    - "Arduino Interfacing"
   frontend_and_ui:
     - "React 19"
     - "Next.js"
@@ -90,6 +100,9 @@ Python (Advanced), C++, JavaScript (ES6+), TypeScript, SQL (PostgreSQL, SQLite),
 
 ## Frameworks & Deep Learning
 PyTorch, TensorFlow, Scikit-learn, ONNX, ONNX Runtime, Keras, OpenCV, Hugging Face Transformers, Transfer Learning, Model Quantization.
+
+## Embedded Systems, Robotics & Edge AI
+Raspberry Pi 4, ATmega Microcontrollers, Watchdog Timers & Heartbeat Protocols (~500 ms), Sensor Fusion (MPU6050 IMU, 3× Ultrasonic Sensors), DC Motor Control (PWM, 12V 755 Motors), Odometry, Edge AI (INT8 TensorFlow Lite, YOLOv26n), Fail-Safe Hardware Safety Architecture, Arduino.
 
 ## Data Analytics & Business Intelligence
 Power BI (Data Modeling, DAX Measures & Calculated Columns, Interactive Dashboards, Star Schema, Drill-Downs, KPI Reporting), Microsoft Excel (Power Query Automated ETL, Power Pivot Tabular Modeling, Advanced Formulas, PivotTables), Exploratory Data Analysis (EDA), Cohort & Retention Analysis, Metric Trees, Executive Reporting & Data Storytelling.
