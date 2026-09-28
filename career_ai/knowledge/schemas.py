@@ -7,6 +7,19 @@ Publications, Skills, and Evidence Chunks.
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 
+CANONICAL_DOMAINS = [
+    "Machine Learning & Deep Learning",
+    "Computer Vision & Medical Imaging",
+    "Natural Language Processing & LLMs",
+    "Retrieval-Augmented Generation (RAG)",
+    "Forensics & AI Verification",
+    "Autonomous Robotics & Cyber-Physical Systems",
+    "Edge AI & Embedded Systems",
+    "Data Analytics & Business Intelligence",
+    "Time Series & Forecasting",
+    "Reinforcement Learning",
+]
+
 class ProjectSchema(BaseModel):
     project_name: str
     short_description: str

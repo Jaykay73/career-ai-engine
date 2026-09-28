@@ -19,6 +19,7 @@ class JobRequirements(BaseModel):
     frameworks: List[str] = Field(default_factory=list)
     infrastructure_and_cloud: List[str] = Field(default_factory=list)
     databases: List[str] = Field(default_factory=list)
+    embedded_and_robotics: List[str] = Field(default_factory=list)
     ml_domains: List[str] = Field(default_factory=list)
     education_requirements: List[str] = Field(default_factory=list)
     experience_years_requirement: Optional[str] = None
@@ -27,7 +28,7 @@ class JobRequirements(BaseModel):
 
     @property
     def all_target_skills(self) -> List[str]:
-        """Aggregates all unique technical skills, frameworks, and languages."""
+        """Aggregates all unique technical skills, frameworks, hardware, and languages."""
         combined = (
             self.required_skills +
             self.preferred_skills +
@@ -35,6 +36,7 @@ class JobRequirements(BaseModel):
             self.frameworks +
             self.infrastructure_and_cloud +
             self.databases +
+            self.embedded_and_robotics +
             self.ml_domains
         )
         # Deduplicate preserving order
