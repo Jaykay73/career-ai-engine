@@ -43,9 +43,17 @@ class FactualClaimVerifier:
         # 2. Build authoritative token and metric sets from verified chunks
         all_evidence_text = " ".join([f"{c.title} {c.text} {c.source_id}" for c in authoritative_evidence])
         all_evidence_lower = all_evidence_text.lower()
+        all_evidence_normalized = re.sub(r"[\s\-_–]+", "", all_evidence_lower)
 
-        # Extract numerical metrics from generated bullets (e.g. 35%, 140k, 100ms)
-        metric_pattern = re.compile(r"\b(\d+(?:\.\d+)?%|\d+[kKmM]\b|\b\d+\s*ms\b)")
+        # Extract numerical and hardware metrics from generated bullets (e.g. 35%, 140k, 100ms, 500 ms, 12V, 4-5 kg)
+        metric_pattern = re.compile(r"\b(\d+(?:\.\d+)?%|\d+[kKmM]\b|\b\d+\s*ms\b|\b\d+(?:[–\-]\d+)?\s*kg\b|\b\d+\s*[vV]\b)", re.IGNORECASE)
+
+        def is_metric_verified(metric_str: str) -> bool:
+            m_clean = metric_str.lower().strip()
+            if m_clean in all_evidence_lower:
+                return True
+            m_norm = re.sub(r"[\s\-_–]+", "", m_clean)
+            return m_norm in all_evidence_normalized
 
         # 3. Audit Experience bullets
         for exp in cv.experiences:
@@ -57,7 +65,7 @@ class FactualClaimVerifier:
                 # Metric check
                 metrics_found = metric_pattern.findall(bullet.text)
                 for m in metrics_found:
-                    if m.lower() not in all_evidence_lower:
+                    if not is_metric_verified(m):
                         unsupported.append(f"Fabricated metric '{m}' in experience bullet: \"{bullet.text}\"")
 
         # 4. Audit Project bullets
@@ -74,7 +82,7 @@ class FactualClaimVerifier:
                 metrics_found = metric_pattern.findall(bullet.text)
                 for m in metrics_found:
                     # Check if metric exists in evidence
-                    if m.lower() not in all_evidence_lower:
+                    if not is_metric_verified(m):
                         unsupported.append(f"Fabricated metric '{m}' in project bullet: \"{bullet.text}\"")
 
         # 5. Audit Certifications
@@ -96,7 +104,7 @@ class FactualClaimVerifier:
                 for bullet in item.bullets:
                     metrics_found = metric_pattern.findall(bullet.text)
                     for m in metrics_found:
-                        if m.lower() not in all_evidence_lower:
+                        if not is_metric_verified(m):
                             unsupported.append(f"Fabricated metric '{m}' in custom section '{sec.title}': \"{bullet.text}\"")
 
         is_valid = len(unsupported) == 0
