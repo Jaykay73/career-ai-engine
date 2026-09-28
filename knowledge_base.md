@@ -68,7 +68,7 @@
 | **Reinforcement Learning** | Tabular Q-Learning, Proximal Policy Optimization (PPO), NEAT (Neuroevolution of Augmenting Topologies), Genetic Algorithms (GA), Gymnasium |
 | **Backend & Cloud / DevOps** | FastAPI, Node.js, Flask, Docker, Kubernetes, Vercel Serverless, Hugging Face Spaces, Streamlit Cloud, AWS, GCP, Linux, Git / GitHub Actions CI/CD |
 | **Frontend & UI Engineering** | React 19, Next.js, Vite, Tailwind CSS v4, Framer Motion, tsParticles, Responsive UI/UX |
-| **Embedded & Systems** | Arduino, Raspberry Pi, Microcontroller Interfacing, Sensor Integration |
+| **Embedded & Systems / Robotics** | Raspberry Pi 4, ATmega Microcontrollers, Watchdog Timers & Heartbeat Protocols, Sensor Fusion (MPU6050 IMU, Ultrasonic 3x), DC Motor Control (PWM, 755 12V), Odometry, Edge AI (INT8 TFLite, YOLOv26n), Arduino |
 
 ---
 
@@ -167,6 +167,18 @@
 - **Bank Customer Churn Prediction:** [jaykay-bank-churn.streamlit.app](https://jaykay-bank-churn.streamlit.app/) | [GitHub](https://github.com/Jaykay73/Bank-Customer-Churn-Prediction) — Gradient Boosting model with interactive UI and feature importance tuning.
 - **Credit Card Fraud Detection:** [GitHub](https://github.com/jaykay73/credit-card-fraud-detection) — Unsupervised anomaly detection on extreme class-imbalanced data using Isolation Forest, Deep Autoencoders (TensorFlow), and PCA / t-SNE latent space visualizers.
 
+### 11. Intelligent System for Lawn Mowers (Autonomous Intelligent Lawn Mower)
+- **Category:** Autonomous Robotics / Cyber-Physical Systems / Edge AI
+- **Tech Stack:** Raspberry Pi 4 (4 GB RAM), ATmega Microcontroller, YOLOv26n (INT8 TFLite), 3× Ultrasonic Sensors, MPU6050 IMU, Odometry, 12V 755 DC Motors, Python, C/C++.
+- **Architecture & Capabilities:**
+  - Autonomous robotic lawn mower for flat, dry grass fields, developed as a final-year engineering project.
+  - **Layered Architecture:** Decouples high-level AI/perception on a Raspberry Pi 4 (4 GB RAM, 64 GB SD card) from safety-critical real-time control on an independent ATmega microcontroller.
+  - **Edge Computer Vision:** Deploys lightweight YOLOv26n nano variant using TensorFlow Lite with INT8 quantization for low-latency, low-power on-device inference without cloud dependency.
+  - **Multi-Sensor Fusion:** 3× forward-facing ultrasonic sensors provide direct proximity measurements, MPU6050 6-DOF IMU tracks orientation and angular movement, and drive odometry estimates wheel displacement (with AprilTags explored as visual fiducial reference).
+  - **Fail-Safe Watchdog Safety Layer:** Continuous ~500 ms heartbeat protocol between Raspberry Pi and ATmega; any compute hang, OS freeze, or software failure triggers an immediate safe state stopping the 12V 755 drive motors.
+  - **Human-in-the-Loop Controls:** ON/OFF, manual override, and emergency STOP capabilities.
+  - **Engineering Adaptation:** Originally designed for Raspberry Pi 5; when stolen prior to final presentation, rapidly adapted the ML stack and inference pipeline to run reliably on a Raspberry Pi 4 (4 GB RAM) under tight resource constraints. Target specifications include >95% obstacle avoidance and 4–5 kg payload chassis.
+
 ---
 
 ## 6. Publications & Technical Writing
@@ -229,3 +241,9 @@ Published on Medium in *Artificial Intelligence in Plain English*:
 4. **Nigerian Pidgin Predictor:** Dual-model (LSTM + Trigram) real-time next-word prediction engine for Nigerian Pidgin English.
 5. **CineMatch API:** Semantic movie recommendation service powered by SentenceTransformers embeddings and FAISS vector indexing.
 6. **Brain Tumor & Diabetic Retinopathy Classifiers:** Medical AI vision models utilizing EfficientNet with Grad-CAM explainability and edge quantization.
+7. **Autonomous Intelligent Lawn Mower:** Layered cyber-physical robotics system combining Raspberry Pi 4 edge AI (INT8 quantized YOLOv26n on TFLite) with an independent ATmega safety watchdog controller, 3× ultrasonic sensors, MPU6050 IMU, and odometry.
+
+### Q: Tell me about the Autonomous Intelligent Lawn Mower project
+**A:**
+The Intelligent System for Lawn Mowers is an autonomous robotic lawn mower designed for flat, dry fields, developed as a final-year engineering project. It combines edge computer vision, machine learning, ultrasonic sensing, IMU-based motion sensing, autonomous navigation, and embedded safety control. A Raspberry Pi 4 (4 GB RAM, 64 GB SD card) performs high-level perception and navigation planning using an INT8 TensorFlow Lite implementation of YOLOv26n. To ensure physical machine safety, an independent ATmega microcontroller serves as a hardware watchdog monitoring a continuous ~500 ms heartbeat from the Raspberry Pi; if the Pi crashes or hangs, the ATmega immediately cuts power to the 12V 755 drive motors. The system incorporates three ultrasonic sensors, an MPU6050 IMU, odometry, manual override, and emergency STOP controls. While originally designed for a Raspberry Pi 5, the platform was rapidly adapted to a Raspberry Pi 4 after the Pi 5 was stolen prior to the presentation, demonstrating strong edge optimization and engineering resilience under strict hardware constraints.
+
