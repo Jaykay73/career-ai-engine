@@ -75,6 +75,9 @@ class LaTeXRenderer:
             for proj in data["projects"]:
                 proj["name"] = escape_latex(proj.get("name", ""))
                 proj["technologies"] = escape_latex(proj.get("technologies", ""))
+                # URLs are kept clean for href
+                proj["live_demo_url"] = proj.get("live_demo_url") or ""
+                proj["github_url"] = proj.get("github_url") or ""
                 for b in proj.get("bullets", []):
                     b["text"] = escape_latex(b.get("text", ""))
 

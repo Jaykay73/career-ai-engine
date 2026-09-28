@@ -15,6 +15,8 @@ class TailoredProject(BaseModel):
     technologies: str  # e.g., "PyTorch, FastAPI, OpenCV, Tesseract, Docker"
     bullets: List[TailoredBullet]
     evidence_ids: List[str] = Field(default_factory=list)
+    live_demo_url: Optional[str] = None
+    github_url: Optional[str] = None
 
 class TailoredExperience(BaseModel):
     company: str

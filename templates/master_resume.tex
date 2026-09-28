@@ -151,7 +151,7 @@
     \resumeSubHeadingListStart
       ((* for proj in projects *))
       \resumeProjectHeading
-          {\textbf{((( proj.name )))} $|$ \emph{((( proj.technologies )))}}
+          {\textbf{((( proj.name )))} $|$ \emph{((( proj.technologies )))}((* if proj.live_demo_url *)) $|$ \href{((( proj.live_demo_url )))}{\underline{Live Demo}}((* endif *))((* if proj.github_url *)) $|$ \href{((( proj.github_url )))}{\underline{GitHub}}((* endif *))}
           {}
           \resumeItemListStart
             ((* for bullet in proj.bullets *))
