@@ -63,18 +63,32 @@
 | **Data Analytics & BI** | Power BI (Data Modeling, DAX Measures, Star Schema, KPI Dashboards), Microsoft Excel (Power Query ETL, Power Pivot Tabular Modeling, PivotTables, Dynamic Arrays), Exploratory Data Analysis (EDA), Cohort & Retention Analysis, Metric Trees, Executive Storytelling |
 | **Time Series & Forecasting** | ARIMA, SARIMA, Auto-ARIMA, Exponential Smoothing (Holt-Winters, ETS), Trend & Seasonality Decomposition, Stationarity Testing (ADF, KPSS), Autocorrelation (ACF/PACF), Temporal Feature Engineering (Lags, Rolling Statistics), Walk-Forward Validation (MAE, RMSE, MAPE) |
 | **Deep Learning & ML Frameworks** | PyTorch, TensorFlow, Keras, Scikit-learn, ONNX, ONNX Runtime, Model Quantization (INT8 / FP16), Transfer Learning |
-| **NLP, LLMs & Vector Search** | SentenceTransformers, FAISS, Pinecone, RAG Pipelines, LangChain, Google Gemini 2.0 Flash, DeepSeek LLM, OpenAI API, NER, Text Classification, Tokenization |
+| **NLP, LLMs, Agents & Vector Search** | LangGraph (Autonomous Reasoning Agents, Tool Calling Sandbox), SentenceTransformers, FAISS, Pinecone, RAG Pipelines (SOP & Regulatory Retrieval), LangChain, Google Gemini 2.0 Flash, DeepSeek LLM, OpenAI API, NER, Text Classification, Tokenization |
 | **Computer Vision & Forensics** | EfficientNet (B0), OpenCV, Tesseract OCR, C2PA Content Credentials (`c2patool`), Grad-CAM Explainability, Metadata Forensics (EXIF/XMP) |
 | **Reinforcement Learning** | Tabular Q-Learning, Proximal Policy Optimization (PPO), NEAT (Neuroevolution of Augmenting Topologies), Genetic Algorithms (GA), Gymnasium |
-| **Backend & Cloud / DevOps** | FastAPI, Node.js, Flask, Docker, Kubernetes, Vercel Serverless, Hugging Face Spaces, Streamlit Cloud, AWS, GCP, Linux, Git / GitHub Actions CI/CD |
-| **Frontend & UI Engineering** | React 19, Next.js, Vite, Tailwind CSS v4, Framer Motion, tsParticles, Responsive UI/UX |
+| **Backend, Systems & Cloud / DevOps** | FastAPI (REST, SSE, Async Services), Node.js, Flask, PostgreSQL / SQLite (ACID Transactions), Deterministic Rules Engines & Invariants, Docker, Kubernetes, Vercel Serverless, Hugging Face Spaces, Streamlit Cloud, AWS, GCP, Linux, Git / GitHub Actions CI/CD |
+| **Frontend & UI Engineering** | Next.js 14 (App Router), React 19, Vite, Tailwind CSS v4, Framer Motion, tsParticles, Responsive UI/UX, Enterprise Dashboards |
 | **Embedded & Systems / Robotics** | Raspberry Pi 4, ATmega Microcontrollers, Watchdog Timers & Heartbeat Protocols, Sensor Fusion (MPU6050 IMU, Ultrasonic 3x), DC Motor Control (PWM, 755 12V), Odometry, Edge AI (INT8 TFLite, YOLOv26n), Arduino |
 
 ---
 
 ## 5. Detailed Project Showcase
 
-### 1. BitCheck — Multimodal Media Forensics & AI Verification API
+### 1. SupplyPilot — Autonomous AI Operations & Supply Chain Decision-Support Platform
+- **Category:** Agentic AI / Supply Chain & Operations Research / Decision Support
+- **Live Demo:** [supply-pilot-three.vercel.app](https://supply-pilot-three.vercel.app/)
+- **GitHub Repository:** [github.com/Jaykay73/SupplyPilot](https://github.com/Jaykay73/SupplyPilot)
+- **Tech Stack:** FastAPI, LangGraph, Python, SQLite / PostgreSQL, Pydantic v2, Next.js 14 (App Router), Tailwind CSS, Lucide Icons, RAG (SOP Embeddings).
+- **Core Architecture & Capabilities:**
+  - **Governing Philosophy:** *"LLMs propose and reason; deterministic systems verify and execute."* Designed for highly regulated industrial and pharmaceutical manufacturing (FDA 21 CFR Part 11 compliant audit readiness).
+  - **Hybrid Decision Engine:** Combines an autonomous LangGraph agent loop (react-pattern multi-step reasoning with controlled tool sandbox), Standard Operating Procedure (SOP) vector RAG retrieval, Jev probabilistic risk scoring, and a deterministic business invariant rules gate.
+  - **Deterministic Invariant Supremacy:** Business policies, inventory reservations, budget thresholds, and multi-signature authorization execute via unbypassable deterministic code outside LLM hallucination paths.
+  - **5-Stage Disruption Cascade Simulator:** Interactive operational simulation modeling:
+    1. *Supplier Delivery Disruption* $\rightarrow$ 2. *Factory Inventory Deficit* $\rightarrow$ 3. *Cleanroom Freeze Violation* $\rightarrow$ 4. *Customer SLA & Penalty Risk* $\rightarrow$ 5. *Autonomous Mitigation Proposal & Action Execution*.
+  - **Human-in-the-Loop (HITL) Governance:** Dual-tier authorization queue staging high-value interventions (reallocating safety stock, issuing POs to alternate suppliers, expediting logistics) with immutable cryptographic audit logging.
+  - **Enterprise User Console:** Built on Next.js 14 with whitish high-density data tables, real-time agent audit drawer, disruption cascade visualizer, and approval workflows.
+
+### 2. BitCheck — Multimodal Media Forensics & AI Verification API
 - **Category:** Multimodal AI / Media Forensics / Cybersecurity
 - **Live Demo:** [bitcheckapp.vercel.app](https://bitcheckapp.vercel.app/)
 - **Hugging Face Space:** [huggingface.co/spaces/Jaykay73/Bitcheck-image](https://huggingface.co/spaces/Jaykay73/Bitcheck-image)
@@ -86,7 +100,7 @@
   - **Audio & Text:** Detects voice clone frequency signatures and LLM synthetic text markers.
   - **Deployment:** Asynchronous FastAPI backend containerized with Docker and hosted on Hugging Face Spaces.
 
-### 2. AI Resume Optimizer & Career Architect
+### 3. AI Resume Optimizer & Career Architect
 - **Category:** AI / Career Tech / Natural Language Processing
 - **Live Demo:** [aicareerarchitect.vercel.app](https://aicareerarchitect.vercel.app)
 - **GitHub Repository:** [github.com/Jaykay73/resume-optimizer](https://github.com/Jaykay73/resume-optimizer)
@@ -97,7 +111,7 @@
   - Leverages Gemini 2.0 Flash to synthesize custom-tailored cover letters and suggested portfolio projects to bridge gaps.
   - Uses ONNX quantization for low-latency Named Entity Recognition (NER) inference.
 
-### 3. LockedIn AI Service — Intelligent Roadmap Generator
+### 4. LockedIn AI Service — Intelligent Roadmap Generator
 - **Category:** Autonomous AI Service / Web Agent / Education Tech
 - **Live Demo:** [lockedin4l.vercel.app](https://lockedin4l.vercel.app/)
 - **Hugging Face Space:** [huggingface.co/spaces/Jaykay73/LockedIn](https://huggingface.co/spaces/Jaykay73/LockedIn)
@@ -109,7 +123,7 @@
   - Custom filtering logic eliminates paywalled, duplicate, or broken links.
   - Generates modular curricula via DeepSeek LLM, validated with Pydantic v2 schemas and cached in SQLite.
 
-### 4. Nigerian Pidgin Next-Word Predictor
+### 5. Nigerian Pidgin Next-Word Predictor
 - **Category:** NLP / Low-Resource African Language Modeling
 - **Live Demo:** [nextword-pidgin.streamlit.app](https://nextword-pidgin.streamlit.app/)
 - **GitHub Repository:** [github.com/Jaykay73/nextword-pidgin](https://github.com/Jaykay73/nextword-pidgin)
@@ -119,7 +133,7 @@
   - Dual-model system: deep LSTM neural network for semantic accuracy and n-gram (Trigram) statistical model for speed.
   - Frontend features keystroke debouncing for real-time inference over FastAPI.
 
-### 5. CineMatch API — Vector Movie Recommendation Engine
+### 6. CineMatch API — Vector Movie Recommendation Engine
 - **Category:** Recommendation Systems / Semantic Vector Search
 - **Live Demo:** [aether-match.vercel.app](https://aether-match.vercel.app)
 - **GitHub Repository:** [github.com/Jaykay73/CineMatch](https://github.com/Jaykay73/CineMatch)
@@ -129,7 +143,7 @@
   - Generates 384-dimensional dense vector embeddings of movie metadata and plots.
   - Sub-100ms similarity retrieval using FAISS vector indexing with automatic TMDB dataset sync.
 
-### 6. Brain Tumor MRI Classifier
+### 7. Brain Tumor MRI Classifier
 - **Category:** Deep Learning / Medical Computer Vision
 - **Live Demo:** [mri-scan.streamlit.app](https://mri-scan.streamlit.app/)
 - **GitHub Repository:** [github.com/Jaykay73/MRI-Scan](https://github.com/Jaykay73/MRI-Scan)
@@ -139,7 +153,7 @@
   - Trained via transfer learning on EfficientNetB0 with custom medical data augmentation.
   - Quantized for mobile edge inference and deployed as an interactive Streamlit web application.
 
-### 7. Diabetic Retinopathy Classifier
+### 8. Diabetic Retinopathy Classifier
 - **Category:** Deep Learning / Medical Imaging
 - **Live Demo:** [diabetic-retinopathy-m.streamlit.app](https://diabetic-retinopathy-m.streamlit.app/)
 - **GitHub Repository:** [github.com/Jaykay73/Diabetes](https://github.com/Jaykay73/Diabetes)
@@ -148,7 +162,7 @@
   - Automated grading and classification of retina fundus scans for diabetic retinopathy stages.
   - Includes Grad-CAM visual heatmaps for clinical interpretability and decision verification.
 
-### 8. Flappy Bird Reinforcement Learning
+### 9. Flappy Bird Reinforcement Learning
 - **Category:** Reinforcement Learning / Control & Policy Search
 - **GitHub Repository:** [github.com/Jaykay73/flappy-bird](https://github.com/Jaykay73/flappy-bird)
 - **Tech Stack:** PyTorch, Gymnasium, NEAT-Python, NumPy.
@@ -156,18 +170,18 @@
   - Comparative benchmark analyzing tabular Q-Learning (with custom discrete state mapping and reward shaping), Deep RL (PPO), NEAT (Neuroevolution), and Genetic Algorithms (GA).
   - Analyzed sample efficiency, convergence rates, and policy stability across environments.
 
-### 9. Legal Document Analyzer
+### 10. Legal Document Analyzer
 - **Category:** NLP / Retrieval-Augmented Generation (RAG)
 - **GitHub Repository:** [github.com/Jaykay73/Legal-Document-Analyser](https://github.com/Jaykay73/Legal-Document-Analyser)
 - **Tech Stack:** SentenceTransformers, PyPDF, Streamlit, Cosine Similarity Ranking.
 - **Architecture & Capabilities:**
   - Contract analysis tool using RAG to parse clauses, identify obligations, and score legal liabilities using dense chunk embeddings.
 
-### 10. Tabular ML & Anomaly Detection Systems
+### 11. Tabular ML & Anomaly Detection Systems
 - **Bank Customer Churn Prediction:** [jaykay-bank-churn.streamlit.app](https://jaykay-bank-churn.streamlit.app/) | [GitHub](https://github.com/Jaykay73/Bank-Customer-Churn-Prediction) — Gradient Boosting model with interactive UI and feature importance tuning.
 - **Credit Card Fraud Detection:** [GitHub](https://github.com/jaykay73/credit-card-fraud-detection) — Unsupervised anomaly detection on extreme class-imbalanced data using Isolation Forest, Deep Autoencoders (TensorFlow), and PCA / t-SNE latent space visualizers.
 
-### 11. Intelligent System for Lawn Mowers (Autonomous Intelligent Lawn Mower)
+### 12. Intelligent System for Lawn Mowers (Autonomous Intelligent Lawn Mower)
 - **Category:** Autonomous Robotics / Cyber-Physical Systems / Edge AI
 - **Tech Stack:** Raspberry Pi 4 (4 GB RAM), ATmega Microcontroller, YOLOv26n (INT8 TFLite), 3× Ultrasonic Sensors, MPU6050 IMU, Odometry, 12V 755 DC Motors, Python, C/C++.
 - **Architecture & Capabilities:**
@@ -223,8 +237,8 @@ Published on Medium in *Artificial Intelligence in Plain English*:
 **A:** 
 - **Languages:** Python, C++, JavaScript, TypeScript, SQL.
 - **Machine Learning & DL:** PyTorch, TensorFlow, Scikit-learn, ONNX, Quantization, Transfer Learning.
-- **AI Domains:** Multimodal Forensics (BitCheck), Low-Resource NLP (Nigerian Pidgin), RAG & Semantic Vector Search (FAISS, Pinecone), Medical Imaging (EfficientNet, Grad-CAM), Reinforcement Learning (PPO, NEAT, Q-Learning).
-- **Web & Deployment:** FastAPI, Docker, Kubernetes, Hugging Face Spaces, Vercel, Streamlit, Next.js, React 19, Tailwind CSS.
+- **AI Domains:** Agentic AI & Decision Engines (LangGraph, SupplyPilot), Multimodal Forensics (BitCheck), Low-Resource NLP (Nigerian Pidgin), RAG & Semantic Vector Search (FAISS, Pinecone, SOP Embeddings), Medical Imaging (EfficientNet, Grad-CAM), Reinforcement Learning (PPO, NEAT, Q-Learning).
+- **Web & Deployment:** FastAPI, Docker, Kubernetes, Hugging Face Spaces, Vercel, Streamlit, Next.js 14, React 19, Tailwind CSS.
 
 ### Q: How do I contact or hire John?
 **A:**
@@ -235,13 +249,18 @@ Published on Medium in *Artificial Intelligence in Plain English*:
 
 ### Q: What notable projects has John built?
 **A:**
-1. **BitCheck:** Multimodal media forensics API detecting AI generation across image, audio, video, and text using PyTorch, C2PA, OCR, and metadata analysis.
-2. **AI Resume Optimizer:** Career coach evaluating resumes against job descriptions with 95% parsing accuracy and generating custom cover letters via Gemini 2.0 Flash and ONNX.
-3. **LockedIn:** Standalone roadmap generator using DeepSeek LLM, Tavily, YouTube API, and Pydantic v2.
-4. **Nigerian Pidgin Predictor:** Dual-model (LSTM + Trigram) real-time next-word prediction engine for Nigerian Pidgin English.
-5. **CineMatch API:** Semantic movie recommendation service powered by SentenceTransformers embeddings and FAISS vector indexing.
-6. **Brain Tumor & Diabetic Retinopathy Classifiers:** Medical AI vision models utilizing EfficientNet with Grad-CAM explainability and edge quantization.
-7. **Autonomous Intelligent Lawn Mower:** Layered cyber-physical robotics system combining Raspberry Pi 4 edge AI (INT8 quantized YOLOv26n on TFLite) with an independent ATmega safety watchdog controller, 3× ultrasonic sensors, MPU6050 IMU, and odometry.
+1. **SupplyPilot:** Autonomous AI operations & decision-support platform for pharmaceutical/industrial manufacturing combining LangGraph multi-step reasoning, SOP RAG retrieval, Jev probabilistic risk scoring, deterministic invariant enforcement, and a 5-stage disruption cascade simulator with HITL governance.
+2. **BitCheck:** Multimodal media forensics API detecting AI generation across image, audio, video, and text using PyTorch, C2PA, OCR, and metadata analysis.
+3. **AI Resume Optimizer:** Career coach evaluating resumes against job descriptions with 95% parsing accuracy and generating custom cover letters via Gemini 2.0 Flash and ONNX.
+4. **LockedIn:** Standalone roadmap generator using DeepSeek LLM, Tavily, YouTube API, and Pydantic v2.
+5. **Nigerian Pidgin Predictor:** Dual-model (LSTM + Trigram) real-time next-word prediction engine for Nigerian Pidgin English.
+6. **CineMatch API:** Semantic movie recommendation service powered by SentenceTransformers embeddings and FAISS vector indexing.
+7. **Brain Tumor & Diabetic Retinopathy Classifiers:** Medical AI vision models utilizing EfficientNet with Grad-CAM explainability and edge quantization.
+8. **Autonomous Intelligent Lawn Mower:** Layered cyber-physical robotics system combining Raspberry Pi 4 edge AI (INT8 quantized YOLOv26n on TFLite) with an independent ATmega safety watchdog controller, 3× ultrasonic sensors, MPU6050 IMU, and odometry.
+
+### Q: Tell me about the SupplyPilot project
+**A:**
+SupplyPilot is an autonomous AI operations and decision-support platform designed for highly regulated manufacturing industries (e.g., pharmaceutical and industrial chemicals). Built on the core architectural axiom *"LLMs propose and reason; deterministic systems verify and execute,"* it addresses complex disruptions (like border customs delays) across organizational silos. It features a hybrid decision engine coupling a LangGraph multi-step reasoning agent with SOP vector RAG retrieval, Jev probabilistic risk scoring, and unbypassable deterministic rules gates that enforce hard business invariants and multi-tier approval thresholds. It includes an interactive 5-stage disruption cascade simulator modeling consequences from supply delays to cleanroom freeze violations and customer SLA breach penalties, with Human-in-the-Loop (HITL) sign-off workflows and FDA 21 CFR Part 11 compliant audit logging. The tech stack includes FastAPI, LangGraph, Python, SQLite/PostgreSQL, and Next.js 14 App Router.
 
 ### Q: Tell me about the Autonomous Intelligent Lawn Mower project
 **A:**
