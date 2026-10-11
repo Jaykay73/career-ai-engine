@@ -45,8 +45,8 @@ class FactualClaimVerifier:
         all_evidence_lower = all_evidence_text.lower()
         all_evidence_normalized = re.sub(r"[\s\-_–]+", "", all_evidence_lower)
 
-        # Extract numerical and hardware metrics from generated bullets (e.g. 35%, 140k, 100ms, 500 ms, 12V, 4-5 kg)
-        metric_pattern = re.compile(r"\b(\d+(?:\.\d+)?%|\d+[kKmM]\b|\b\d+\s*ms\b|\b\d+(?:[–\-]\d+)?\s*kg\b|\b\d+\s*[vV]\b)", re.IGNORECASE)
+        # Extract numerical, financial, and hardware metrics from generated bullets (e.g. 35%, 140k, $50,000, 100ms, 500 ms, 12V, 4-5 kg, 5-stage)
+        metric_pattern = re.compile(r"(\$\d+(?:,\d+)*(?:\.\d+)?|\b\d+(?:\.\d+)?%|\b\d+[kKmM]\b|\b\d+\s*ms\b|\b\d+(?:[–\-]\d+)?\s*kg\b|\b\d+\s*[vV]\b|\b\d+-stage\b)", re.IGNORECASE)
 
         def is_metric_verified(metric_str: str) -> bool:
             m_clean = metric_str.lower().strip()
