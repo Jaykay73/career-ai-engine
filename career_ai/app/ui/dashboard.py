@@ -30,8 +30,8 @@ def render_dashboard():
 
     counts = summary.get("record_counts", {})
     total_records = summary.get("total_records", 0)
-    meta = summary.get("index_metadata", {})
-    total_chunks = meta.get("chunk_count", meta.get("total_chunks", 0)) if meta else 0
+    meta = summary.get("index_metadata") or {}
+    total_chunks = meta.get("chunk_count", meta.get("total_chunks", 0))
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:

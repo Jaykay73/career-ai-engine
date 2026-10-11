@@ -199,6 +199,32 @@ class ApplicationService:
         """Returns statistics on current knowledge base records and index state."""
         counts = self.repo.count_records_by_type()
         meta = self.repo.get_index_metadata()
+
+        # If zero records or chunks are detected (cold start on deployment),
+        # auto-bootstrap SQLite records and BM25 index from Markdown files
+        if not counts or not meta or meta.chunk_count == 0:
+            logger.info("Cold start detected: Auto-bootstrapping knowledge base...")
+            try:
+                chunks, db_records = self.indexer.scan_and_chunk()
+                if chunks and db_records:
+                    for rec in db_records:
+                        self.repo.upsert_knowledge_record(rec)
+                    if hasattr(self.retriever, "bm25") and self.retriever.bm25:
+                        self.retriever.bm25.build_index(chunks)
+                    from career_ai.database.models import IndexMetadataDB
+                    meta = IndexMetadataDB(
+                        embedding_model=settings.embedding_model,
+                        embedding_dim=384,
+                        chunk_count=len(chunks),
+                        record_count=len(db_records),
+                        index_version="1.0",
+                        updated_at=datetime.utcnow().isoformat()
+                    )
+                    self.repo.update_index_metadata(meta)
+                    counts = self.repo.count_records_by_type()
+            except Exception as e:
+                logger.error("Failed to auto-bootstrap knowledge base: %s", e)
+
         meta_dict = None
         if meta:
             meta_dict = {

@@ -8,6 +8,8 @@ from typing import Optional
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -56,6 +58,18 @@ class Settings(BaseSettings):
 
     def __init__(self, **values):
         super().__init__(**values)
+        # Ensure directories are absolute and anchored to PROJECT_ROOT
+        if not self.data_dir.is_absolute():
+            self.data_dir = (PROJECT_ROOT / self.data_dir).resolve()
+        if not self.output_dir.is_absolute():
+            self.output_dir = (PROJECT_ROOT / self.output_dir).resolve()
+        if not self.knowledge_dir.is_absolute():
+            self.knowledge_dir = (PROJECT_ROOT / self.knowledge_dir).resolve()
+        if not self.templates_dir.is_absolute():
+            self.templates_dir = (PROJECT_ROOT / self.templates_dir).resolve()
+        if not self.qdrant_storage_path.is_absolute():
+            self.qdrant_storage_path = (PROJECT_ROOT / self.qdrant_storage_path).resolve()
+
         # Attempt to detect credentials from Streamlit Secrets when deployed on Streamlit Cloud
         if not self.deepseek_api_key:
             try:
