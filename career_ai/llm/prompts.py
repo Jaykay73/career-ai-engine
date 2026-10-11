@@ -61,7 +61,7 @@ MASTER PROFILE DETAILS:
 - Name: John Aledare
 - Email: aledareoluwaseunjohn@gmail.com
 - Location: Nigeria (Open to Remote / Hybrid / Relocation)
-- Links: GitHub (github.com/Jaykay73), LinkedIn (linkedin.com/in/johnaledare), Portfolio (aledare.vercel.app), Medium (medium.com/@jermaine73)
+- Links: GitHub (github.com/Jaykay73), LinkedIn (linkedin.com/in/johnaledare), Portfolio (aledare.me), Medium (medium.com/@jermaine73)
 - Education: Bachelor of Engineering (B.Eng.) in Computer Engineering — University of Ilorin (2021 – 2026)
 - Certifications:
   * OCI Generative AI Professional (Oracle, 2024)

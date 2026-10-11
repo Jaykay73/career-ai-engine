@@ -65,7 +65,7 @@ class TailoredCV(BaseModel):
     full_name: str = "John Aledare"
     headline: str = "AI Engineer | Machine Learning Engineer"
     email: str = "aledareoluwaseunjohn@gmail.com"
-    portfolio_url: str = "https://aledare.vercel.app"
+    portfolio_url: str = "https://aledare.me"
     github_url: str = "https://github.com/Jaykay73"
     linkedin_url: str = "https://linkedin.com/in/johnaledare"
     summary: Optional[str] = None

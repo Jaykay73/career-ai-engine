@@ -425,7 +425,7 @@ class CVGenerator:
         # 5. Core Contact Details
         cv.full_name = "John Aledare"
         cv.email = "aledareoluwaseunjohn@gmail.com"
-        cv.portfolio_url = "https://aledare.vercel.app"
+        cv.portfolio_url = "https://aledare.me"
         cv.github_url = "https://github.com/Jaykay73"
         cv.linkedin_url = "https://linkedin.com/in/johnaledare"
 

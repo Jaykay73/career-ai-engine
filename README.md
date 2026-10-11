@@ -364,6 +364,6 @@ Tests cover:
   - Oracle Cloud Infrastructure 2024 Generative AI Certified Professional (Oracle, 2024)
   - Oracle Cloud Infrastructure 2024 AI Foundations Associate (Oracle, 2024)
   - Machine Learning Specialization (Stanford University & DeepLearning.AI, 2024)
-- **Portfolio**: [aledare.vercel.app](https://aledare.vercel.app)
+- **Portfolio**: [aledare.me](https://aledare.me)
 - **GitHub**: [github.com/Jaykay73](https://github.com/Jaykay73)
 - **LinkedIn**: [linkedin.com/in/johnaledare](https://linkedin.com/in/johnaledare)

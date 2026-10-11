@@ -116,7 +116,7 @@ class MasterProfile(BaseModel):
     headline: str = "AI Engineer | Machine Learning Engineer | Applied AI"
     email: str = "aledareoluwaseunjohn@gmail.com"
     location: str = "Nigeria"
-    portfolio_url: str = "https://aledare.vercel.app"
+    portfolio_url: str = "https://aledare.me"
     github_url: str = "https://github.com/Jaykay73"
     linkedin_url: str = "https://www.linkedin.com/in/johnaledare"
     medium_url: str = "https://medium.com/@jermaine73"

@@ -17,7 +17,7 @@
 - **GitHub:** [https://github.com/Jaykay73](https://github.com/Jaykay73)
 - **LinkedIn:** [https://www.linkedin.com/in/johnaledare](https://www.linkedin.com/in/johnaledare)
 - **Twitter / X:** [https://x.com/Jermaine_73](https://x.com/Jermaine_73)
-- **Portfolio Website:** [https://aledare.vercel.app](https://aledare.vercel.app)
+- **Portfolio Website:** [https://aledare.me](https://aledare.me)
 - **Medium Publication:** [https://medium.com/@jermaine73](https://medium.com/@jermaine73) *(Author at Artificial Intelligence in Plain English)*
 
 ---
@@ -245,7 +245,7 @@ Published on Medium in *Artificial Intelligence in Plain English*:
 - **Email:** `aledareoluwaseunjohn@gmail.com`
 - **LinkedIn:** `https://www.linkedin.com/in/johnaledare`
 - **GitHub:** `https://github.com/Jaykay73`
-- **Portfolio:** `https://aledare.vercel.app`
+- **Portfolio:** `https://aledare.me`
 
 ### Q: What notable projects has John built?
 **A:**
