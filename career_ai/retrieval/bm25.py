@@ -15,10 +15,18 @@ logger = get_logger("bm25")
 
 TECHNICAL_TOKEN_REGEX = re.compile(r"[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*|c\+\+|[a-zA-Z0-9]+")
 
+TECHNICAL_TOKEN_EXPANSIONS: Dict[str, List[str]] = {
+    "langgraph": ["agent", "agentic", "graph", "workflow"],
+    "sop": ["standard", "operating", "procedure", "regulatory"],
+    "hitl": ["human", "loop", "approval"],
+    "cfr": ["21cfr11", "compliance", "fda", "audit"],
+    "supplypilot": ["supply", "pilot", "logistics", "operations"],
+}
+
 def tokenize(text: str) -> List[str]:
     """
     Tokenizes text by lowercasing and extracting alphanumeric and technical terms,
-    preserving compound identifiers (e.g., yolo-v26n, tflite, c++, mpu6050).
+    preserving compound identifiers (e.g., yolo-v26n, tflite, c++, mpu6050, langgraph).
     """
     raw_tokens = [t.lower() for t in TECHNICAL_TOKEN_REGEX.findall(text)]
     expanded: List[str] = []
@@ -29,6 +37,9 @@ def tokenize(text: str) -> List[str]:
             for subpart in re.split(r"[-_]", token):
                 if subpart and subpart != token:
                     expanded.append(subpart)
+        # Expand known domain synonyms
+        if token in TECHNICAL_TOKEN_EXPANSIONS:
+            expanded.extend(TECHNICAL_TOKEN_EXPANSIONS[token])
     return expanded
 
 class BM25Retriever:
