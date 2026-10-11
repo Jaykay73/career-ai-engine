@@ -54,9 +54,43 @@ class Settings(BaseSettings):
     latex_compiler: str = Field(default="pdflatex", alias="LATEX_COMPILER")
     latex_timeout_seconds: int = Field(default=30, alias="LATEX_TIMEOUT_SECONDS")
 
+    def __init__(self, **values):
+        super().__init__(**values)
+        # Attempt to detect credentials from Streamlit Secrets when deployed on Streamlit Cloud
+        if not self.deepseek_api_key:
+            try:
+                import streamlit as st
+                if hasattr(st, "secrets"):
+                    if "DEEPSEEK_API_KEY" in st.secrets:
+                        self.deepseek_api_key = str(st.secrets["DEEPSEEK_API_KEY"])
+                    elif "deepseek_api_key" in st.secrets:
+                        self.deepseek_api_key = str(st.secrets["deepseek_api_key"])
+            except Exception:
+                pass
+
     @property
     def sqlite_db_path(self) -> Path:
         return self.data_dir / self.sqlite_db_name
+
+    @property
+    def llm_base_url(self) -> str:
+        return self.deepseek_base_url
+
+    @property
+    def llm_model(self) -> str:
+        return self.deepseek_model
+
+    @property
+    def bm25_top_k(self) -> int:
+        return self.top_k_bm25
+
+    @property
+    def vector_top_k(self) -> int:
+        return self.top_k_vector
+
+    @property
+    def qdrant_path(self) -> Path:
+        return self.qdrant_storage_path
 
     def ensure_directories(self) -> None:
         """Ensures that all runtime data and output directories exist."""
