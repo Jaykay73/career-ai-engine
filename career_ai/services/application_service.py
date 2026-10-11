@@ -105,10 +105,20 @@ CANONICAL_ENTITIES: Dict[str, Dict[str, Any]] = {
         "file": "projects/lockedin.md",
         "keywords": ["lockedin", "pomodoro", "study timer"]
     },
+    "supply-pilot": {
+        "name": "SupplyPilot — Autonomous AI Operations & Supply Chain Platform",
+        "file": "projects/supply-pilot.md",
+        "keywords": ["supplypilot", "supply pilot", "langgraph", "pharma", "cleanroom freeze", "disruption cascade", "deterministic rules", "invariants", "sop rag", "hitl", "decision engine", "operations"]
+    },
+    "autonomous-lawn-mower": {
+        "name": "Intelligent System for Lawn Mowers (Autonomous Lawn Mower)",
+        "file": "projects/autonomous-lawn-mower.md",
+        "keywords": ["lawn mower", "autonomous lawn mower", "edge ai", "raspberry pi", "atmega", "watchdog", "yolov26n", "tflite", "ultrasonic", "imu", "robotics"]
+    },
     "bitcheck": {
-        "name": "BitCheck Crypto Price Tracker",
+        "name": "BitCheck — Multimodal AI Verification API",
         "file": "projects/bitcheck.md",
-        "keywords": ["bitcheck", "bitcoin alert", "crypto alert", "crypto tracker"]
+        "keywords": ["bitcheck", "forensics", "deepfake", "c2pa", "watermark", "multimodal", "synthetic media"]
     },
     "resume-optimizer": {
         "name": "Resume Optimizer",
