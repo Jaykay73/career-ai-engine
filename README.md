@@ -149,9 +149,39 @@ python scripts/rebuild_index.py
 
 ### 5. Launch the Streamlit Web Application
 ```powershell
+# Run from repository root:
+streamlit run streamlit_app.py
+
+# Or directly via package path:
 streamlit run career_ai/app/streamlit_app.py
 ```
 Open your browser at `http://localhost:8501`.
+
+---
+
+## ☁️ Deploying on Streamlit Community Cloud
+
+The engine is engineered for seamless zero-configuration deployment on [Streamlit Community Cloud](https://share.streamlit.io):
+
+1. **Push Repository to GitHub**:
+   Ensure your latest code is pushed to your GitHub repository (`Jaykay73/career-ai-engine`).
+
+2. **Connect to Streamlit Cloud**:
+   - Go to [share.streamlit.io](https://share.streamlit.io) and click **"New app"**.
+   - Select your repository: `Jaykay73/career-ai-engine`.
+   - Set **Branch**: `main`.
+   - Set **Main file path**: `streamlit_app.py`.
+
+3. **Configure Secrets (Optional)**:
+   - Under **Advanced settings** -> **Secrets**, paste your DeepSeek API key:
+     ```toml
+     DEEPSEEK_API_KEY = "your-deepseek-api-key"
+     ```
+   - *Note: If no API key is provided, the engine runs in 100% deterministic offline heuristic mode with zero external dependencies.*
+
+4. **Automatic Cloud Builds**:
+   - Streamlit Cloud reads `packages.txt` to install Debian system packages (`texlive-latex-base`, `texlive-latex-recommended`, `texlive-fonts-recommended`) enabling cloud PDF resume generation.
+   - Streamlit Cloud reads `requirements.txt` installing all core UI and ML dependencies (`streamlit`, `pandas`, `pydantic`, `torch`, `sentence-transformers`, `qdrant-client`, `rank-bm25`).
 
 ---
 
@@ -269,6 +299,17 @@ The repository features comprehensive canonical records for the **Intelligent Sy
 
 ---
 
+## 🌐 Flagship Agentic Decision Platform: SupplyPilot
+
+The repository showcases comprehensive canonical knowledge for **SupplyPilot — Autonomous AI Operations & Supply Chain Decision-Support Platform**:
+- **Governing Axiom**: *"LLMs propose and reason; deterministic systems verify and execute."*
+- **Hybrid Decision Architecture**: Couples an autonomous LangGraph agent loop with Standard Operating Procedure (SOP) vector RAG retrieval, Jev probabilistic risk scoring, and unbypassable deterministic rules gates.
+- **5-Stage Disruption Cascade Simulator**: Interactive simulation modeling the domino effect of port customs holds through factory deficits, cleanroom freeze breaches, and customer SLA penalties.
+- **Dual-Tier Human-in-the-Loop (HITL)**: Authorizes critical interventions exceeding the $50,000 threshold or safety inventory margins with immutable, FDA 21 CFR Part 11 compliant audit logging.
+- **Enterprise Console**: High-density whitish interface engineered with Next.js 14 App Router, Tailwind CSS, Lucide icons, and real-time agent audit drawer.
+
+---
+
 ## 🛠️ CLI Operational Suite
 
 Career AI Engine includes command-line tools for local inspection, testing, and synchronization:
@@ -280,10 +321,13 @@ python -m career_ai.cli stats
 # 2. Execute hybrid BM25 + dense vector query
 python -m career_ai.cli query "autonomous lawn mower watchdog heartbeat"
 
-# 3. Verify retrieval accuracy for robotics and edge AI domains
+# 3. Query agentic operations and supply chain decision platform
+python -m career_ai.cli query "SupplyPilot LangGraph deterministic rules"
+
+# 4. Verify retrieval accuracy for robotics and edge AI domains
 python -m career_ai.cli verify-robotics
 
-# 4. Synchronize canonical Markdown records and audit index health
+# 5. Synchronize canonical Markdown records and audit index health
 python scripts/sync_knowledge.py --check
 python scripts/sync_knowledge.py --reindex
 ```
@@ -299,6 +343,7 @@ pytest -v
 ```
 
 Tests cover:
+- **`tests/test_supply_pilot.py`**: Schema compliance, frontmatter parsing, agentic retrieval tokenization, and Streamlit deployment configuration.
 - **`tests/test_robotics_parser.py`**: Schema compliance, section extraction, and chunk generation for the autonomous mower project.
 - **`tests/test_robotics_retrieval.py`**: BM25 ranking, technical compound token extraction, and RRF fusion for hardware queries.
 - **`tests/test_bm25.py`**: Lexical scoring and tokenization invariants.
