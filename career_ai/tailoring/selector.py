@@ -57,6 +57,7 @@ class EvidenceSelector:
 
         # Fallback to standard showcase projects if too few returned
         preferred_order = [
+            "supply-pilot",
             "bitcheck",
             "autonomous-lawn-mower",
             "resume-optimizer",
@@ -77,6 +78,12 @@ class EvidenceSelector:
         if any(kw in job_text_corpus for kw in robotics_keywords):
             if "autonomous-lawn-mower" in project_scores:
                 project_scores["autonomous-lawn-mower"] += 1.0
+
+        # Check for agentic AI / operations / supply chain roles and boost domain-aligned projects
+        agentic_keywords = {"agent", "agentic", "langgraph", "supply chain", "operations", "logistics", "manufacturing", "decision support", "sop", "decision engine", "simulation"}
+        if any(kw in job_text_corpus for kw in agentic_keywords):
+            if "supply-pilot" in project_scores:
+                project_scores["supply-pilot"] += 1.0
 
         # Sort projects by relevance score
         sorted_pids = sorted(project_scores.keys(), key=lambda p: project_scores[p], reverse=True)
