@@ -18,6 +18,8 @@ CANONICAL_DOMAINS = [
     "Data Analytics & Business Intelligence",
     "Time Series & Forecasting",
     "Reinforcement Learning",
+    "Agentic AI & Decision Support",
+    "Operations Research & Supply Chain Systems",
 ]
 
 class ProjectSchema(BaseModel):
