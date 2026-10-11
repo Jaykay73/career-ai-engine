@@ -102,7 +102,15 @@ def render_settings():
             st.markdown(f"- **{k}**: `{v}`")
 
         st.markdown("---")
-        if st.button("🧪 Trigger Index Verification"):
-            with st.spinner("Verifying index integrity..."):
-                summary = application_service.get_knowledge_summary()
-                st.json(summary)
+        c_ver, c_reindex = st.columns(2)
+        with c_ver:
+            if st.button("🧪 Trigger Index Verification", use_container_width=True):
+                with st.spinner("Verifying index integrity..."):
+                    summary = application_service.get_knowledge_summary()
+                    st.json(summary)
+        with c_reindex:
+            if st.button("🔄 Rebuild Full Hybrid Index", type="primary", use_container_width=True):
+                with st.spinner("Rebuilding BM25 and vector stores across canonical records..."):
+                    res = application_service.reindex_knowledge()
+                    st.success(f"Successfully indexed {res.get('chunks_indexed', 0)} chunks across {res.get('files_indexed', 0)} records in {res.get('duration_seconds', 0)}s!")
+                    st.rerun()

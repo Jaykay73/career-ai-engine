@@ -37,13 +37,21 @@ def render_dashboard():
     with col1:
         st.metric("Total Knowledge Records", total_records, delta=f"{len(counts)} categories")
     with col2:
-        st.metric("Indexed Chunks", total_chunks, delta="Hybrid RRF Ready")
+        st.metric("Indexed Chunks", total_chunks, delta="Hybrid RRF Ready" if total_chunks > 0 else "Index Needed")
     with col3:
         status_text = "Ready (DeepSeek)" if settings.deepseek_api_key else "Offline Heuristic"
         st.metric("LLM Provider", settings.llm_provider.upper(), delta=status_text)
     with col4:
         latex_status = "Available" if summary.get("latex_available") else "TeX Source Only"
         st.metric("LaTeX Compiler", latex_status, delta="Safe Fallback Active")
+
+    if total_chunks == 0:
+        st.warning("⚠️ **Knowledge Base Index Empty**: No indexed evidence chunks were found in storage. Click below to initialize the index from your canonical Markdown files.")
+        if st.button("⚡ Index Knowledge Base Now (Hybrid BM25 + Dense Vectors)", type="primary"):
+            with st.spinner("Processing canonical records, computing embeddings, and building indexes..."):
+                res = application_service.reindex_knowledge()
+                st.success(f"Successfully indexed {res.get('chunks_indexed', 0)} chunks across {res.get('files_indexed', 0)} records in {res.get('duration_seconds', 0)}s!")
+                st.rerun()
 
     st.markdown("---")
 

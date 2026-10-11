@@ -31,9 +31,14 @@ wheels/
 .coverage
 htmlcov/
 
-# Local Data & Database
+# Local Data & Database (Canonical SQLite DB & Search Indexes tracked for Cloud deployment)
 data/*
 !data/.gitkeep
+!data/career_ai.db
+!data/bm25_index.pkl
+!data/qdrant_db/
+!data/qdrant_db/**
+data/qdrant_db/.lock
 
 # Output directories
 output/*
